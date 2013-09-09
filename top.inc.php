@@ -2,14 +2,15 @@
 	$language=array(
 			"Eng"=>"eng.php",
 			"Укр"=>"ukr.php",
-			"Рос"=>"rus.php",
+			"Рос"=>"rus.php"
 	);
 	$menu=array(
 		change_language($lang,'Home')=>"index.php",
 		change_language($lang,'Contacts')=>"index.php?id=contacts",
 		change_language($lang,'About Us')=>"index.php?id=about",
 		change_language($lang,'News')=>"index.php?id=news",
-		change_language($lang,'Articles')=>"index.php?id=articles"
+		change_language($lang,'Articles')=>"index.php?id=articles",
+		change_language($lang,'Registration')=>"index.php?id=registration_form"
 	);
 ?>
 <table width="100%">

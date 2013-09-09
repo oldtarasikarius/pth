@@ -188,11 +188,13 @@ insert_w('You have successfully registered','Ви успішно зареєструвались','Вы усп
 insert_w('Return to main page','Повернутись на головну','Вернуться на главную');
 insert_w('A user with this name already registered, please choose another','Користувач з таким ім`ям вже зареєстрований, будь-ласка, виберіть інше','Пользователь с таким именем уже зарегистрирован, пожалуйста, выберите другой');
 
-		*/
+
+		
 	
+insert_w('Password','Пароль','Пароль');	
 	
-	
-	
+	*/
+
 	
 	
 	

@@ -37,7 +37,7 @@ require"lib.inc.php";
 		?>
 	</td>
 </tr>
-
+<!--Форма входу-->
 <tr>
 	<td align="right" colspan="3">
 		<?php
