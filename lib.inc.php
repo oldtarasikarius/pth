@@ -2,7 +2,7 @@
 mysql_connect("localhost","root","ppp") or die(mysql_error());
 mysql_select_db('metal_gym')or die(mysql_error());
 
-//Зміна мови
+//Зміна мови//////////////////////////////////////////////////////////////////////////////
 function change_language($lang=false,$text){
 		if(!$lang or $lang=='eng')
 			return $text;
@@ -14,9 +14,10 @@ function change_language($lang=false,$text){
 			$row=mysql_fetch_assoc($result)or die(mysql_error());
 			$text= $row[$lang];
 			return $text;
-		}	
+			
+			}	
 	}
-//Меню
+//Меню//////////////////////////////////////////////////////////////////////////
 	function getMenu($menu,$vertical=TRUE){
 		if(!is_array($menu))
 			return false;
@@ -30,15 +31,15 @@ function change_language($lang=false,$text){
 		echo"</ul>";
 		return true;
 	}
-//фільтрація данних	
+//фільтрація данних	/////////////////////////////////////////////
 	function clear_data($data){
 	return mysql_real_escape_string(trim(strip_tags($data)));
 	}
-//Вихід з профілю
+//Вихід з профілю//////////////////////////////////////////
 	function log_out(){
 		unset($_SESSION['name']);
 	}
-//Показати статті
+//Показати статті//////////////////////////////////////////////////////////////////////////////////////////
 	function show_articles(){
 		$sql="SELECT *
 			FROM articles
@@ -55,7 +56,7 @@ function change_language($lang=false,$text){
 			
 		}		
 	}
-//Вибір однієї статті з бази
+//Вибір однієї статті з бази//////////////////////////////////////////////////////////////////////////////////
 	function get_art($id){
 		$sql="SELECT article
 				FROM articles
@@ -65,7 +66,7 @@ function change_language($lang=false,$text){
 		$art=$row['article'];
 		return $art;
 	}
-//Редагувати статтю
+//Редагувати статтю//////////////////////////////////////////////////////////////////////////////////////
 	function edit($id,$nart){
 		$sql="UPDATE articles
 				SET article='$nart'
@@ -73,7 +74,7 @@ function change_language($lang=false,$text){
 		mysql_query($sql) or die(mysql_error);
 	}
 	
-//Додати Статтю
+//Додати Статтю/////////////////////////////////////////////////////////////////////////////////////////////
 	function add_art($art,$name){
 		$sql="INSERT INTO articles(	article,
 									login)
@@ -82,7 +83,7 @@ function change_language($lang=false,$text){
 		mysql_query($sql)or die(mysql_error());
 		return true;					
 	}
-//Вхід користувача
+//Вхід користувача///////////////////////////////////////////////////////////////////////////
 	function enter($login,$password){
 		if($login=='admin'and $password==md5('1111')){
 			$_SESSION['name']=$login;
@@ -90,7 +91,7 @@ function change_language($lang=false,$text){
 			die();
 		}	
 		$sql="SELECT login,password
-				FROM users
+				FROM people
 				WHERE login='$login'
 				AND password='$password'";
 		$result=mysql_query($sql) or die(mysql_error());
@@ -102,10 +103,11 @@ function change_language($lang=false,$text){
 		else
 			header("Location:index.php?id=enter_error");
 	}
-//Реєстрація
-	function registration($login,$password,$lang){
-		$sql="SELECT login,password
-				FROM users
+//Реєстрація//////////////////////////////////////////////////////////////
+	function registration($login,$password,$email,$lang){
+	//login cheking
+		$sql="SELECT login,password,mail     
+				FROM people
 				WHERE login='{$login}'
 			";
 		$result=mysql_query($sql) or die(mysql_error());
@@ -115,18 +117,30 @@ function change_language($lang=false,$text){
 			echo"<p color='red'>".change_language($lang,'A user with this name already registered, please choose another')."!</p>";
 			exit();
 		}
+	 //mail cheking
+		$sql="SELECT login,password,mail     
+				FROM people
+				WHERE mail='{$email}'
+			";
+		$result=mysql_query($sql) or die(mysql_error());
+		$row=mysql_fetch_assoc($result);
 		
-		$sql="	INSERT INTO users(
-							login,password)
+		if($email==$row['mail']){
+			echo"<p color='red'>".change_language($lang,'This e-mail already registered,check again please')."!</p>";
+			exit();
+		}
+	//add user to database
+		$sql="	INSERT INTO people(
+							login,password,mail)
 						VALUES(
-							'$login','$password')";
+							'$login','$password','$email')";
 		mysql_query($sql)or die(mysql_error());
 		
 		$_SESSION['name']="$login";		
 		echo $_SESSION['name'].", ". change_language($lang,'You have successfully registered')."...<br />
 				<a href='index.php'>".change_language($lang,'Return to main page')."...</a>";
 	}
-/////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	function insert($eng,$ukr,$rus){
 		$sql="INSERT INTO  main_articles(
 					eng_art,ukr_art,rus_art)
@@ -153,7 +167,7 @@ function change_language($lang=false,$text){
 		//if($art)
 		return $art;
 	}
-	
+////////////////////////////////////////////////////////////////////////////////	
 function insert_w($eng,$ukr,$rus){
 		$sql="INSERT INTO  languages(
 					eng,ukr,rus)
@@ -162,50 +176,8 @@ function insert_w($eng,$ukr,$rus){
 		mysql_query($sql)or die(mysql_error());
 		echo"</br>$eng,$ukr,$rus are added";
 	}	
-/*insert_w('login must filled out','ви не ввели логін','введите логин');	
-insert_w('You have to enter','Вам потрібно увійти','Вы должны войти');
-insert_w('A combination of user name and password was not found, check the data, please','Данної комбінації не існує, перевірте дані й спробуйте ще раз','Этой комбинации логина и пароля не сущевствует, проверте данные');
-insert_w('Add article','Додати статтю','Добавить статью');
-insert_w('something is going wrong','щось пішло не так','Что-то не так');
-insert_w('Previous page','попередня сторінка','Предыдущая страница');
-insert_w('Add','Додати','Добавить');
-insert_w('You have to register','Вам потрібно зареєструватись','Вам нужно зарегистрироватся');
-insert_w('Edit','Редагувати','Изменить');
-insert_w('Hello','Привіт','Здравствуй');
-insert_w('Exit','Вихід','Выход');
-insert_w('Registration','Реєстрація','Регистрация');
-insert_w('Login','Логін','Логин');
-insert_w('Enter','Вхід','Вход');
-insert_w('Enter your nickname','Введіть логін','Введите ваш логин');
-insert_w('Enter your password','Введіть пароль','Введите пароль');
-insert_w('Home','Головна','Главная');
-insert_w('Contacts','Контакти','Контакты');
-insert_w('About Us','Про нас','О нас');
-insert_w('News','Новини','Новости');
-insert_w('Articles','Статті','Статьи');
-insert_w('Register','Зареєструватись','Зарегистрироватся');
-insert_w('You have successfully registered','Ви успішно зареєструвались','Вы успешно зарегистрировались');
-insert_w('Return to main page','Повернутись на головну','Вернуться на главную');
-insert_w('A user with this name already registered, please choose another','Користувач з таким ім`ям вже зареєстрований, будь-ласка, виберіть інше','Пользователь с таким именем уже зарегистрирован, пожалуйста, выберите другой');
 
 
-		
-	
-insert_w('Password','Пароль','Пароль');	
-	
-	*/
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

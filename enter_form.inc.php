@@ -2,7 +2,7 @@
 	<table>
 		<tr>
 		<?php if(!empty($name)){		
-			echo "<td>".change_language($lang,'Hello').",".$name."!!!</td>";
+			echo "<td>".change_language($lang,'Hello').",<a href='".$name."_profile.php'>".$name."</a>!!!</td>";
 		?>
 			<td>
 				<a href="exit.php"><?=change_language($lang,'Exit');?></a>
