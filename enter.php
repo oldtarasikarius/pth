@@ -9,5 +9,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		$password=md5(clear_data($_POST['password']));
 		enter($login,$password);
 	}
+	else
+		header("Location:index.php?id=enter_error");
 }	
 ?>

@@ -29,6 +29,7 @@ require"lib.inc.php";
 <body>
 <table border="0" width="100%" > 
 
+	
 <tr>
 	<td colspan="3" align="center">
 <!--верхня частина сторінки-->
@@ -37,6 +38,23 @@ require"lib.inc.php";
 		?>
 	</td>
 </tr>
+<?php
+	if($id=='profile'){
+		if(!empty($name)){
+			include("profile.php");
+		}
+		else
+			echo"Please log in!";
+	}
+	elseif($id=='edit_profile'){
+		if(!empty($name)){
+			include("edit_profile.php");
+		}
+		else
+			echo"Please log in!";
+	}
+	else{
+?>
 <!--Форма входу-->
 <tr>
 	<td align="right" colspan="3">
@@ -45,10 +63,10 @@ require"lib.inc.php";
 		?>
 	</td>
 </tr>
-	
+	<!--ліве меню-->
 <tr>
-	<td width="15%"align="center">
-<!--ліве меню-->
+	<td width="25%"align="center">
+		
 	</td>
 	<td align="center">
 <!--основний контент-->
@@ -73,17 +91,23 @@ require"lib.inc.php";
 						echo change_language($lang,'You have to enter');
 					break;
 				case'enter_error':	
-					echo change_language($lang,'A combination of user name and password was not found, check the data, please');break;
+					if(empty($name))
+						echo change_language($lang,'A combination of user name and password was not found, check the data, please');
+					else
+						echo main_art($lang);
+					break;
 				case'edit_form':
 					include"edit_form.php";break;
 				case'main_art_form':
 					include"main_art_form.php";break;
+				//case'profile':
+					//include"profile.php";break;
 				default:
 					echo main_art($lang);
 			}
 		?>
 	</td>
-	<td width="15%" align="center" valign="top">
+	<td width="25%" align="center" valign="top">
 	<!--праве меню-->
 		<table>
 			<tr>
@@ -109,11 +133,13 @@ require"lib.inc.php";
 		</table>
 	</td>
 </tr>
-	
+<?php
+		}
+?>		
 <tr>
 	<td colspan="3" align="center" valign="bottom">
 		<?php
-			include "bottom.inc.php";
+			//include "bottom.inc.php";
 		?>
 	</td>
 </tr>

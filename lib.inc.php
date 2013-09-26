@@ -177,7 +177,28 @@ function insert_w($eng,$ukr,$rus){
 		echo"</br>$eng,$ukr,$rus are added";
 	}	
 
+////////////ADDED AND SHOW AVAtAR FUNCTIONs///////////////////
+function add_avatar($name,$fname){
+	$sql="UPDATE people
+			SET avatar='$fname'
+			WHERE login='$name'
+				";
+	mysql_query("$sql") or die(mysql_error());
+}
 
+function show_avatar($name){
+	$sql="SELECT avatar
+			FROM people
+			WHERE login='$name'
+		";
+	$result=mysql_query("$sql") or die(mysql_error());
+	$row=mysql_fetch_assoc($result)or die(mysql_error());
+	$ava=$row['avatar'];
+	if($ava==NULL)
+		echo"guest1.gif";
+	else
+		echo $ava;
+}
 	
 	
 	
