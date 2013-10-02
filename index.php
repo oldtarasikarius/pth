@@ -100,8 +100,8 @@ require"lib.inc.php";
 					include"edit_form.php";break;
 				case'main_art_form':
 					include"main_art_form.php";break;
-				//case'profile':
-					//include"profile.php";break;
+				case'edit_pers_data':
+					include"edit_pers_data.php";break;
 				default:
 					echo main_art($lang);
 			}

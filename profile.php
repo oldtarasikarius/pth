@@ -7,11 +7,7 @@
 				</ul>
 			</td>
 			<td align="left">
-				<ul style='list-style-type:none' >
-						<li>Taras<li>
-						<li>Konkevich</li>
-						<li>tarasikarius@mail.ru</li>
-					</ul>
+				<?=show_pers_data($name)?>
 			</td>
 			<td width="20%"></td>
 		</tr>

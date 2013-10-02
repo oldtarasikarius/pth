@@ -199,8 +199,51 @@ function show_avatar($name){
 	else
 		echo $ava;
 }
-	
-	
+/////////////////////////////Added and show personal data functions//////////////////////
+function edit_pers_data($name,$fname="",$lname="",$email="",$password=""){
+	if(!empty($fname)){
+		$sql="UPDATE people
+			SET first_name='$fname'
+			WHERE login='$name'
+				";
+	mysql_query("$sql") or die(mysql_error());
+	}
+	if(!empty($lname)){
+		$sql="UPDATE people
+			SET last_name='$lname'
+			WHERE login='$name'
+				";
+	mysql_query("$sql") or die(mysql_error());
+	}
+	if(!empty($email)){
+		$sql="UPDATE people
+			SET mail='$email'
+			WHERE login='$name'
+				";
+	mysql_query("$sql") or die(mysql_error());
+	}
+	if(!empty($password)){
+		$sql="UPDATE people
+			SET password='$password'
+			WHERE login='$name'
+				";
+	mysql_query("$sql") or die(mysql_error());
+	}
+}
+////////////
+function show_pers_data($name){
+	$sql="SELECT last_name,
+					first_name,
+					mail
+			FROM people
+			WHERE login='$name'";
+	$result=mysql_query($sql)or die(mysql_error);
+	$row=mysql_fetch_assoc($result);
+	foreach($row as $item){
+		if($item!="")
+			echo $item."<br>";
+	}
+}	
 	
 	
 	
