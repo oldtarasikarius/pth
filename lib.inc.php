@@ -46,13 +46,12 @@ function change_language($lang=false,$text){
 			ORDER BY id DESC";
 		$result=mysql_query($sql)or die(mysql_error());
 		while($row=mysql_fetch_assoc($result)){
-			//$_SESSION['art_id']=$row['id'];
-			//$_SESSION['art']=$row['article'];
 			$login=$row['login'];
 			$art=$row['article'];
 			$num=$row['id'];
-			echo"Від {$login}<p>{$art}</p>
-			<a href='index.php?id=edit_form&num={$num}'>Редагувати</a><br /><br /><br /><br />";
+			echo"From {$login}<p>{$art}</p>";
+			if($_SESSION['role']=="admin" or ($_SESSION['role']=="editor"and $_SESSION['name']==$login))
+				echo"<a href='index.php?id=edit_form&num={$num}'>Edit</a><br /><br /><br /><br />";
 			
 		}		
 	}
@@ -85,26 +84,26 @@ function change_language($lang=false,$text){
 	}
 //Вхід користувача///////////////////////////////////////////////////////////////////////////
 	function enter($login,$password){
-		if($login=='admin'and $password==md5('1111')){
-			$_SESSION['name']=$login;
-			header("Location:{$_SERVER['HTTP_REFERER']}");
-			die();
-		}	
-		$sql="SELECT login,password
+		$sql="SELECT login,password,role
 				FROM people
 				WHERE login='$login'
 				AND password='$password'";
 		$result=mysql_query($sql) or die(mysql_error());
 		
 		if(mysql_fetch_assoc($result)!==FALSE){
-			$_SESSION['name']=$login;
-			header("Location:{$_SERVER['HTTP_REFERER']}");
+			$row=mysql_fetch_assoc($result)or die(mysql_error());
+			//$_SESSION['role']=$row['role'];
+			if($row['role']!=='locked'){
+				$_SESSION['name']=$login;
+				header("Location:{$_SERVER['HTTP_REFERER']}");
+			}
 		}
 		else
 			header("Location:index.php?id=enter_error");
 	}
 //Реєстрація//////////////////////////////////////////////////////////////
 	function registration($login,$password,$email,$lang){
+		$date=date("D, d M Y H:i:s");
 	//login cheking
 		$sql="SELECT login,password,mail     
 				FROM people
@@ -131,9 +130,9 @@ function change_language($lang=false,$text){
 		}
 	//add user to database
 		$sql="	INSERT INTO people(
-							login,password,mail)
+							login,password,mail,registration_date)
 						VALUES(
-							'$login','$password','$email')";
+							'$login','$password','$email','$date')";
 		mysql_query($sql)or die(mysql_error());
 		
 		$_SESSION['name']="$login";		
@@ -199,8 +198,29 @@ function show_avatar($name){
 	else
 		echo $ava;
 }
-/////////////////////////////Added and show personal data functions//////////////////////
-function edit_pers_data($name,$fname="",$lname="",$email="",$password=""){
+/////////////////////SHOW ROLE FUNCTION///////////
+function show_role($name){
+	$sql="SELECT role
+			FROM people
+			WHERE login='$name'
+		";
+	$result=mysql_query("$sql") or die(mysql_error());
+	$row=mysql_fetch_assoc($result)or die(mysql_error());
+	$role=$row['role'];
+	echo $role;
+}
+/////////////////////////////Added and show personal data functions/////////////////////
+function edit_pers_data($name,$fname="",$lname="",$email="",$password="",$role=""){
+	if(!empty($role)){
+		if($role=="admin" or $role=="editor" or $role=="user" or $role=="locked" or $role=="authorless" ){
+			$sql="UPDATE people
+				SET role='$role'
+				WHERE login='$name'";
+			mysql_query("$sql") or die(mysql_error());
+		}
+		else
+			die("<a href='index.php?id=edit_profile'>Please, enter correct role-name</a>");
+	}
 	if(!empty($fname)){
 		$sql="UPDATE people
 			SET first_name='$fname'
@@ -230,22 +250,154 @@ function edit_pers_data($name,$fname="",$lname="",$email="",$password=""){
 	mysql_query("$sql") or die(mysql_error());
 	}
 }
-////////////
+////////////show_pers_data
 function show_pers_data($name){
 	$sql="SELECT last_name,
 					first_name,
-					mail
+					mail,
+					last_visiting,
+					registration_date
 			FROM people
 			WHERE login='$name'";
 	$result=mysql_query($sql)or die(mysql_error);
-	$row=mysql_fetch_assoc($result);
-	foreach($row as $item){
-		if($item!="")
-			echo $item."<br>";
+	$row=mysql_fetch_assoc($result) or die(mysql_error());
+	echo"<table>";
+	if(!empty($row['last_name']))
+		echo"<tr>
+				<td>Last Name: </td>
+				<td>".$row['last_name']."</td>
+			</tr>";
+	if(!empty($row['first_name']))
+		echo"<tr>
+				<td>First Name: </td>
+				<td>".$row['first_name']."</td>
+			</tr>";
+	if(!empty($row['mail'])and $_SESSION['role']=='admin')
+		echo"<tr>
+				<td>E-mail: </td>
+				<td>".$row['mail']."</td>
+			</tr>";
+	if(!empty($row['last_visiting']))
+		echo"<tr>
+				<td>Last Visiting: </td>
+				<td>".$row['last_visiting']."</td>
+			</tr>";
+	if(!empty($row['registration_date']))
+		echo"<tr>
+				<td>Registration Date: </td>
+				<td>".$row['registration_date']."</td>
+			</tr>";
+	echo "</table>";
+}
+////////////last visiting
+function  last_visiting($name){
+	$date=date("D, d M Y H:i:s");
+	$sql="UPDATE people
+			SET last_visiting='$date'
+			WHERE login='$name'";
+	mysql_query($sql)or die(mysql_error());
+}
+	
+	////////////////////////////////////////////////////////////////////////////////////
+function show_names(){ 			// showing users names function
+	$count=0;
+	$sql="SELECT  login
+			FROM people
+			ORDER BY login DESC";
+	$result=mysql_query($sql)or die(mysql_error());
+	 $num=mysql_num_rows($result);
+	while($row=mysql_fetch_assoc($result)or die(mysql_error())){		
+		
+		$login=$row['login'];
+		echo "<li><a href='index.php?id=profile&link=".$login."'>".$login."</a></li>";
+		$count++;
+		IF($count==$num)
+			break;		
 	}
-}	
-	
-	
-	
+}
+///////////////////////////////////////////////////////////////////
+	function set_role($name){
+		if($name=="")
+			return $_SESSION['role']="guest";
+		$sql="SELECT role
+				FROM people
+				WHERE login='$name'";
+		$result=mysql_query($sql)or die(mysql_error());
+		$row=mysql_fetch_assoc($result)or die(mysql_error());
+		$_SESSION['role']=$row['role'];
+		return $_SESSION['role'];
+	}
+//////////////////////////////////////////////////////////////////////////
+function show_users(){
+	$sql="SELECT 	login,
+					role,
+					last_name,
+					first_name,
+					mail,
+					avatar,
+					registration_date,
+					last_visiting
+			FROM people	
+	";
+	$result=mysql_query($sql)or die(mysql_error());
+	$count=0;
+	$num=mysql_num_rows($result);
+	while($row=mysql_fetch_assoc($result)or die(mysql_error())){
+		
+		if($row['avatar']==NULL)
+			$ava="guest1.gif";
+		else
+			$ava=$row['avatar'];
+		echo"<image src=".$ava." width='130' height='150' style='float:left;margin-right:20px;margin-top: 20px'>";
+		echo"<ul style='list-style-type:none'><li>Login:".$row['login']."</li>";
+			echo"<li>Role:".$row['role']."</li>";
+			echo"<li>First Name:".$row['first_name']."</li>";
+			echo"<li>Last Name:".$row['last_name']."</li>";
+		if($_SESSION['role']=='admin'){
+			echo"<li>E-mail:".$row['mail']."</li>";
+		}
+			echo"<li>Registration date:".$row['registration_date']."</li>";
+			echo"<li>Last Visiting:".$row['last_visiting']."</li>";
+		if($_SESSION['role']=='admin'){
+			echo"<li><a href='delete_user.php?link=".$row['login']."'>Delete</a> or maybe <a href='index.php?id=edit_profile&link=".$row['login']."'>Edit</a>  </li>";
+		}
+			
+		echo"</ul><hr>";	
+		
+		//else
+			//echo"</ul><br><hr>";
+			
+			
+		$count++;
+		IF($count==$num)
+			break;		
+	}	
+}
+//////////////////////////////////////////////////////////////////////////////
+
+function delete_user($name){
+	$sql="DELETE 
+			FROM people
+			WHERE login='$name'";
+	mysql_query($sql)or die(mysql_error());
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
 	?>

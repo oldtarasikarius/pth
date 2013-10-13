@@ -21,7 +21,8 @@
 		change_language($lang,'Exit')=>"exit.php"
 	);
 ?>
-<table width="50%">
+
+<table border="0" width="50%">
 	<tr>
 		<td colspan="3"align="center">
 			<img src="mg.gif" width="90%" />

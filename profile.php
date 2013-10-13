@@ -1,16 +1,31 @@
+<?php
+if(isset ($_GET['link']))
+	$link_name=clear_data($_GET['link']);
+else
+	$link_name=$name;
+	
+?>
 		<tr>
 			<td width="20%"></td>
 			<td align="left" width="15%">
 				<ul style='list-style-type:none' >
-						<li><image src=<?=show_avatar($name)?> width=150 height=150></li>
-						<li><?=$name?></li>
+						<li><image src=<?=show_avatar($link_name)?> width=150 height=150></li>
+						<li><?=$link_name?></li>
+						<li><?=show_role($link_name)?></li>
 				</ul>
 			</td>
 			<td align="left">
-				<?=show_pers_data($name)?>
+				<?php
+				show_pers_data($link_name);
+				?>
+				
 			</td>
 			<td width="20%"></td>
 		</tr>
+		<?php if($role=="admin"or ($name==$link_name and $role!=="authorless")){?>
 		<tr>
-			<td colspan='3' align="center"><a href="index.php?id=edit_profile">Edit Profile</a></td>	
+			<td colspan='3' align="center">
+				<a href="index.php?id=edit_profile&link=<?=$link_name?>">Edit Profile</a>
+			</td>	
 		</tr>
+		<?php }?>

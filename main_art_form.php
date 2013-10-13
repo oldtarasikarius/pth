@@ -1,4 +1,7 @@
-
+<?php
+if($role!="admin" and $role!="editor")
+	die("You have no rights to visit this page!");
+?>
 <form action="add_main_art.php" method="POST">
 	<table>
 		<tr>

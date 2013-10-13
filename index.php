@@ -1,16 +1,17 @@
 <?php
 session_start();
+require"lib.inc.php";
 $name="";
 if(isset($_SESSION['name']))
-	$name=$_SESSION['name'];
+	$name=$_SESSION['name'];	
 $lang="eng";
 if(isset($_SESSION['lang']))
 	$lang=$_SESSION['lang'];
 $id="";
 if(isset($_GET['id']))
 	$id=$_GET['id'];
-	
-require"lib.inc.php";
+$role=set_role($name);	
+
 ?>
 
 <!DOCTYPE html>
@@ -19,10 +20,14 @@ require"lib.inc.php";
 <head>
 	<title>Metal Gym</title>
 	<meta charset=windows-1251" />
-	<style type="text/css">
-		body{ 
+	<style type="text/css" >
+		body{
 			margin:50px 100px 50px 100px;
-			}
+		}
+		#role{
+			margin-top:0;
+			float:right;
+		}
 	</style>
 </head>
 
@@ -33,8 +38,18 @@ require"lib.inc.php";
 <tr>
 	<td colspan="3" align="center">
 <!--верхня частина сторінки-->
+		<p id="role">Hello,<?=$role?></p>
 		<?php 
 			include_once "top.inc.php";
+		?>
+	</td>
+</tr>
+
+<!--Форма входу-->
+<tr>
+	<td align="right" colspan="3">
+		<?php
+			include "enter_form.inc.php";
 		?>
 	</td>
 </tr>
@@ -53,20 +68,25 @@ require"lib.inc.php";
 		else
 			echo"Please log in!";
 	}
+	elseif($id=='all_users'){
+		if(!empty($name)){
+			include("all_users.php");
+		}
+		else
+			echo"Please log in!";
+	}
 	else{
 ?>
-<!--Форма входу-->
 <tr>
-	<td align="right" colspan="3">
+	<td width="25%"align="left" valign="top"><!--ліве меню-->
 		<?php
-			include "enter_form.inc.php";
+			if($role!=="guest"){
+				echo"<ul>";
+				show_names();
+				echo"</ul>
+				<a href='index.php?id=all_users'><p>All users</p></a>";
+			}
 		?>
-	</td>
-</tr>
-	<!--ліве меню-->
-<tr>
-	<td width="25%"align="center">
-		
 	</td>
 	<td align="center">
 <!--основний контент-->
@@ -91,8 +111,10 @@ require"lib.inc.php";
 						echo change_language($lang,'You have to enter');
 					break;
 				case'enter_error':	
-					if(empty($name))
+					if(empty($name)){
+						echo"This profile was locked or...<br>";
 						echo change_language($lang,'A combination of user name and password was not found, check the data, please');
+					}
 					else
 						echo main_art($lang);
 					break;
@@ -112,11 +134,10 @@ require"lib.inc.php";
 		<table>
 			<tr>
 				<td>
-					<?php
-						switch($id){
-							case'articles':
-								if(!empty($name))
-									echo"<a href='index.php?id=art_form'>".change_language($lang,'Add article')."<a>";break;
+				<?php
+					if($id=='articles'){
+						if(!empty($name) and ($role=='admin'or $role=='editor'))
+							echo"<a href='index.php?id=art_form'>".change_language($lang,'Add article')."<a>";
 						}
 					?>
 				</td>
@@ -124,7 +145,7 @@ require"lib.inc.php";
 			<tr>
 				<td>
 					<?php
-						if($name == 'admin') {
+						if($role == 'admin') {
 							echo"<a href='index.php?id=main_art_form'>Add  Main Article</a>";
 						}
 					?>

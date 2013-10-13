@@ -1,4 +1,6 @@
 <?php
+if($_SESSION['role']!="admin" and $_SESSION['role']!="editor")
+	die(" You have no rights to visit this page!");
 if($_SERVER['REQUEST_METHOD']=='GET'){
 	$num=clear_data($_GET['num']);
 	if(!isset($name))
