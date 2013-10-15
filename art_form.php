@@ -11,7 +11,7 @@ if($role!="admin" and $role!="editor")
 			</td>
 		<tr>
 			<td align="right">
-				<input type="submit" value="<?=change_language($lang,'Add')?>" />
+				<input type="submit" value="<?=change_language($connect,'Add',$lang)?>" />
 			</td>
 		</tr>
 	</table>

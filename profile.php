@@ -9,14 +9,14 @@ else
 			<td width="20%"></td>
 			<td align="left" width="15%">
 				<ul style='list-style-type:none' >
-						<li><image src=<?=show_avatar($link_name)?> width=150 height=150></li>
+						<li><image src=<?=show_avatar($connect,$link_name)?> width=150 height=150></li>
 						<li><?=$link_name?></li>
-						<li><?=show_role($link_name)?></li>
+						<li><?=show_role($connect,$link_name)?></li>
 				</ul>
 			</td>
 			<td align="left">
 				<?php
-				show_pers_data($link_name);
+				show_pers_data($connect,$link_name);
 				?>
 				
 			</td>

@@ -20,7 +20,7 @@ if(isset($_SESSION['name'])){
 				if(!empty($_POST['password']))
 					$password=md5(clear_data($_POST['password']));
 					
-				edit_pers_data($link_name,$fname,$lname,$email,$password,$new_role);	
+				edit_pers_data($connect,$link_name,$fname,$lname,$email,$password,$new_role);	
 				header("Location:index.php?id=profile&link=".$link_name);
 			}
 			else{

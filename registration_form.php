@@ -8,7 +8,7 @@
 	<table border="0"width="30%">
 		<tr>
 			<td align="right">
-				<?=change_language($lang,'Login')?>:
+				<?=change_language($connect,'Login',$lang)?>:
 			</td>
 			<td align="left">
 				<input type="text" name="login" size="20">
@@ -16,7 +16,7 @@
 		</tr>
 		<tr>
 			<td align="right">
-				<?=change_language($lang,'Password')?>:
+				<?=change_language($connect,'Password',$lang)?>:
 			</td>
 			<td align="left">
 				<input type="password" name="password" size="20">	
@@ -24,7 +24,7 @@
 		</tr>
 		<tr>
 			<td align="right">
-				<?=change_language($lang,'Repeat Password')?>:
+				<?=change_language($connect,'Repeat Password',$lang)?>:
 			</td>
 			<td align="left">
 				<input type="password" name="repeat_password" size="20">	
@@ -32,7 +32,7 @@
 		</tr>
 		<tr>
 			<td align="right">
-				<?=change_language($lang,'E-mail')?>:
+				<?=change_language($connect,'E-mail',$lang)?>:
 			</td>
 			<td align="left">
 				<input type="text" name="email" size="20">	
@@ -40,7 +40,7 @@
 		</tr>
 		<tr>
 			<td colspan="2" align="right">
-				<input type="submit" value="<?= change_language($lang,'Register')?>">
+				<input type="submit" value="<?= change_language($connect,'Register',$lang)?>">
 			</td>
 		</tr>
 	</table>

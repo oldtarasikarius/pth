@@ -12,7 +12,7 @@ else
 			<td align="left" width="15%">
 				<ul style='list-style-type:none' >
 						<li><image src=<?php
-											show_avatar($link_name);
+											show_avatar($connect,$link_name);
 										?> width=150 height=150>
 						</li>
 						<li>

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require"lib.inc.php";
+//$connect=$_SESSION['connect'];
 $name="";
 if(isset($_SESSION['name']))
 	$name=$_SESSION['name'];	
@@ -10,8 +11,7 @@ if(isset($_SESSION['lang']))
 $id="";
 if(isset($_GET['id']))
 	$id=$_GET['id'];
-$role=set_role($name);	
-
+$role=set_role($connect,$name);	
 ?>
 
 <!DOCTYPE html>
@@ -82,7 +82,7 @@ $role=set_role($name);
 		<?php
 			if($role!=="guest"){
 				echo"<ul>";
-				show_names();
+				show_names($connect);
 				echo"</ul>
 				<a href='index.php?id=all_users'><p>All users</p></a>";
 			}
@@ -125,7 +125,7 @@ $role=set_role($name);
 				case'edit_pers_data':
 					include"edit_pers_data.php";break;
 				default:
-					echo main_art($lang);
+					echo main_art($connect,$lang);
 			}
 		?>
 	</td>
@@ -137,7 +137,7 @@ $role=set_role($name);
 				<?php
 					if($id=='articles'){
 						if(!empty($name) and ($role=='admin'or $role=='editor'))
-							echo"<a href='index.php?id=art_form'>".change_language($lang,'Add article')."<a>";
+							echo"<a href='index.php?id=art_form'>".change_language($connect,'Add article',$lang)."<a>";
 						}
 					?>
 				</td>
@@ -160,6 +160,7 @@ $role=set_role($name);
 <tr>
 	<td colspan="3" align="center" valign="bottom">
 		<?php
+			echo"<pre>".print_r($_SESSION)."</pre>";
 			//include "bottom.inc.php";
 		?>
 	</td>

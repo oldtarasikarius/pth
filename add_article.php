@@ -6,10 +6,10 @@ include"lib.inc.php";
 		if($_SERVER['REQUEST_METHOD']=='POST'){
 			$art=clear_data($_POST['art']);
 			if(!empty($_POST['art']))
-				add_art($art,$name);
+				add_art($connect,$art,$name);
 		}
 		else 
-			echo change_language($lang,'something is going wrong')."... <a href='".$_SERVER['HTTP_REFERER']."'>".change_language($lang,'Previous page')."</a>";
+			echo change_language($connect,'something is going wrong',$lang)."... <a href='".$_SERVER['HTTP_REFERER']."'>".change_language($connect,'Previous page',$lang)."</a>";
 		header("Location:index.php?id=articles");
 	}
 ?>

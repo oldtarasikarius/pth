@@ -5,7 +5,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$login= clear_data($_POST['login']);
 			$password=md5(clear_data($_POST['password']));
 			$email=$_POST['email'];
-			registration($login,$password,$email,$lang);
+			registration($connect,$login,$password,$email,$lang);
 		}
 		else{
 			echo"Check your password, please";

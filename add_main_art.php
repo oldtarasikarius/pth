@@ -7,7 +7,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		$ukr=clear_data($_POST['ukr_art']);
 		$rus=clear_data($_POST['rus_art']);
 		
-		insert($eng,$ukr,$rus);
+		insert($connect,$eng,$ukr,$rus);
 		header("Location:index.php");
 	}
 	else

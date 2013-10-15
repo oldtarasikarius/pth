@@ -1,3 +1,3 @@
 <?php
-show_articles();
+show_articles($connect);
 ?>

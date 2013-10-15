@@ -5,20 +5,20 @@
 			"Рос"=>"rus.php"
 	);
 	$menu1=array(
-		change_language($lang,'Home')=>"index.php",
-		change_language($lang,'Contacts')=>"index.php?id=contacts",
-		change_language($lang,'About Us')=>"index.php?id=about",
-		change_language($lang,'News')=>"index.php?id=news",
-		change_language($lang,'Articles')=>"index.php?id=articles",
-		change_language($lang,'Registration')=>"index.php?id=registration_form"
+		change_language($connect,'Home',$lang)=>"index.php",
+		change_language($connect,'Contacts',$lang)=>"index.php?id=contacts",
+		change_language($connect,'About Us',$lang)=>"index.php?id=about",
+		change_language($connect,'News',$lang)=>"index.php?id=news",
+		change_language($connect,'Articles',$lang)=>"index.php?id=articles",
+		change_language($connect,'Registration',$lang)=>"index.php?id=registration_form"
 	);
 	$menu2=array(
-		change_language($lang,'Home')=>"index.php",
-		change_language($lang,'Contacts')=>"index.php?id=contacts",
-		change_language($lang,'About Us')=>"index.php?id=about",
-		change_language($lang,'News')=>"index.php?id=news",
-		change_language($lang,'Articles')=>"index.php?id=articles",
-		change_language($lang,'Exit')=>"exit.php"
+		change_language($connect,'Home',$lang)=>"index.php",
+		change_language($connect,'Contacts',$lang)=>"index.php?id=contacts",
+		change_language($connect,'About Us',$lang)=>"index.php?id=about",
+		change_language($connect,'News',$lang)=>"index.php?id=news",
+		change_language($connect,'Articles',$lang)=>"index.php?id=articles",
+		change_language($connect,'Exit',$lang)=>"exit.php"
 	);
 ?>
 
@@ -33,18 +33,18 @@
 			<?php
 				if(!empty($name)){
 					if(!getMenu($menu2,false,'30px'))
-						echo"...".change_language($lang,'something is going wrong');
+						echo"...".change_language($connect,'something is going wrong',$lang);
 				}
 				else{
 					if(!getMenu($menu1,false,'30px'))
-						echo"...".change_language($lang,'something is going wrong');
+						echo"...".change_language($connect,'something is going wrong',$lang);
 				}
 			?>
 		</td>
 		<td  >
 			<?php
 				if(!getMenu($language,false))
-					echo"...".change_language($lang,'something is going wrong');
+					echo"...".change_language($connect,'something is going wrong',$lang);
 			?>
 		</td>
 	</tr>

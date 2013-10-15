@@ -25,7 +25,7 @@ if(isset($_SESSION['name'])){
 		$tmp_name=$_FILES['userfile']['tmp_name'];
 		$_SESSION['fname']=$fname;
 		if(move_uploaded_file($tmp_name,$fname)){
-			add_avatar($link_name,$fname);
+			add_avatar($connect,$link_name,$fname);
 			header("Location:index.php?id=edit_profile&link=".$link_name);
 		}
 	}
