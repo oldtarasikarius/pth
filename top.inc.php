@@ -25,7 +25,7 @@
 <table border="0" width="50%">
 	<tr>
 		<td colspan="3"align="center">
-			<img src="mg.gif" width="90%" />
+			<img src="PTH.gif" width="90%" />
 		</td>
 	</tr>
 	<tr>

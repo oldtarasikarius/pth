@@ -1,15 +1,21 @@
 <?php
 session_start();
+$lang="eng";
+if(isset($_SESSION['lang']))
+	$lang=$_SESSION['lang'];
 include"lib.inc.php";
 	if(isset($_SESSION['name'])){
 		$name=$_SESSION['name'];
 		if($_SERVER['REQUEST_METHOD']=='POST'){
 			$art=clear_data($_POST['art']);
-			if(!empty($_POST['art']))
-				add_art($connect,$art,$name);
-		}
-		else 
-			echo change_language($connect,'something is going wrong',$lang)."... <a href='".$_SERVER['HTTP_REFERER']."'>".change_language($connect,'Previous page',$lang)."</a>";
-		header("Location:index.php?id=articles");
+			$header=clear_data($_POST['header']);
+			if(!empty($art)){
+				add_art($connect,$art,$header,$name);
+				header("Location:index.php?id=articles");
+			}
+			else
+				header("Location:{$_SERVER['HTTP_REFERER']}");
+		}		
 	}
+echo change_language($connect,'something is going wrong',$lang)."... <a href='".$_SERVER['HTTP_REFERER']."'>".change_language($connect,'Previous page',$lang)."</a>";
 ?>

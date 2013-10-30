@@ -11,8 +11,13 @@ if($_SERVER['REQUEST_METHOD']=='GET'){
 	<table>
 		<tr>
 			<td width="100%">
+				<input type="text" name="header" value="<?php echo get_art($connect,$num,"header")?>" size="100%">
+			</td>
+		</tr>
+		<tr>
+			<td width="100%">
 				<textarea name="art" cols="100%" rows="15%">
-				<?=get_art($connect,$num)?>
+				<?php echo get_art($connect,$num)?>
 				</textarea>
 			</td>
 		<tr>

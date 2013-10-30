@@ -1,7 +1,7 @@
 <?php
 session_start();
 require"lib.inc.php";
-//$connect=$_SESSION['connect'];
+
 $name="";
 if(isset($_SESSION['name']))
 	$name=$_SESSION['name'];	
@@ -11,7 +11,12 @@ if(isset($_SESSION['lang']))
 $id="";
 if(isset($_GET['id']))
 	$id=$_GET['id'];
-$role=set_role($connect,$name);	
+$role=set_role($connect,$name);
+
+$page_num=1;
+if(isset($_GET['num']))
+	$page_num=$_GET['num'];
+
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +43,7 @@ $role=set_role($connect,$name);
 <tr>
 	<td colspan="3" align="center">
 <!--верхня частина сторінки-->
-		<p id="role">Hello,<?=$role?></p>
+		<p id="role">Hello,<?php echo $role?></p>
 		<?php 
 			include_once "top.inc.php";
 		?>
@@ -108,15 +113,15 @@ $role=set_role($connect,$name);
 					if(isset($name))
 						include"art_form.php";
 					else
-						echo change_language($lang,'You have to enter');
+						echo change_language($connect,'You have to enter',$lang);
 					break;
 				case'enter_error':	
 					if(empty($name)){
 						echo"This profile was locked or...<br>";
-						echo change_language($lang,'A combination of user name and password was not found, check the data, please');
+						echo change_language($connect,'A combination of user name and password was not found, check the data, please',$lang);
 					}
 					else
-						echo main_art($lang);
+						show_articles($connect,$page_num);
 					break;
 				case'edit_form':
 					include"edit_form.php";break;
@@ -125,7 +130,7 @@ $role=set_role($connect,$name);
 				case'edit_pers_data':
 					include"edit_pers_data.php";break;
 				default:
-					echo main_art($connect,$lang);
+					echo show_articles($connect,$page_num);
 			}
 		?>
 	</td>
@@ -135,19 +140,8 @@ $role=set_role($connect,$name);
 			<tr>
 				<td>
 				<?php
-					if($id=='articles'){
-						if(!empty($name) and ($role=='admin'or $role=='editor'))
-							echo"<a href='index.php?id=art_form'>".change_language($connect,'Add article',$lang)."<a>";
-						}
-					?>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<?php
-						if($role == 'admin') {
-							echo"<a href='index.php?id=main_art_form'>Add  Main Article</a>";
-						}
+					if(!empty($name) and ($role=='admin'or $role=='editor'))
+						echo"<a href='index.php?id=art_form'>".change_language($connect,'Add article',$lang)."<a>";
 					?>
 				</td>
 			</tr>
@@ -160,7 +154,6 @@ $role=set_role($connect,$name);
 <tr>
 	<td colspan="3" align="center" valign="bottom">
 		<?php
-			echo"<pre>".print_r($_SESSION)."</pre>";
 			//include "bottom.inc.php";
 		?>
 	</td>

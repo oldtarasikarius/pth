@@ -1,27 +1,35 @@
 <?php
-//mysql_connect("localhost","root","ppp") or die(mysql_error());
-//mysql_select_db('metal_gym')or die(mysql_error());
-
 	$connect= new PDO('mysql:host=localhost;dbname=metal_gym','root','ppp');
-	//$_SESSION['connect']=$connect;
 
-//Çì³íà ìîâè//////////////////////////////////////////////////////////////////////////////
+//Ð—Ð¼Ñ–Ð½Ð° Ð¼Ð¾Ð²Ð¸//////////////////////////////////////////////////////////////////////////////
 function change_language($connect,$text,$lang=false){
 	if(!$lang or $lang=='eng')
 		return $text;
 	else{
-			$sql="SELECT $lang
+		 $sql="SELECT $lang
+                 FROM languages
+                 WHERE eng='$text'";
+            $result=$connect->query($sql);
+            $row=$result->fetch(PDO::FETCH_ASSOC);
+            $text= $row["$lang"];
+           return $text; 
+			 
+	/////////////////////////////////
+			/*$sql=$connect->prepare("SELECT :lang
 					FROM languages
-					WHERE eng='$text'";
+					WHERE eng= :text");
+			$sql->bindParam(':lang',$lang,PDO::PARAM_STR);
+			$sql->bindParam(':text',$text,PDO::PARAM_STR);
 			
-			$result=$connect->query($sql);
-			$row=$result->fetch(PDO::FETCH_ASSOC);
-			$text= $row["$lang"];
-			return $text;				
+			$sql->execute();			
+			$row=$sql->fetch(PDO::FETCH_ASSOC);
+			//$text= $row["$lang"];
+			print_r($row);
+			//return $text;	*/ 		
 	}				
 }
-																
-//Ìåíþ//////////////////////////////////////////////////////////////////////////
+											
+//ÐœÐµÐ½ÑŽ//////////////////////////////////////////////////////////////////////////
 	function getMenu($menu,$vertical=TRUE){
 		if(!is_array($menu))
 			return false;
@@ -35,67 +43,158 @@ function change_language($connect,$text,$lang=false){
 		echo"</ul>";
 		return true;
 	}
-//ô³ëüòðàö³ÿ äàííèõ	/////////////////////////////////////////////
+//Ñ„Ñ–Ð»ÑŒÑ‚Ñ€Ð°Ñ†Ñ–Ñ Ð´Ð°Ð½Ð½Ð¸Ñ…	/////////////////////////////////////////////
 	function clear_data($data){
 		return trim(strip_tags($data));
 	}
-//Âèõ³ä ç ïðîô³ëþ//////////////////////////////////////////
+//Ð’Ð¸Ñ…Ñ–Ð´ Ð· Ð¿Ñ€Ð¾Ñ„Ñ–Ð»ÑŽ//////////////////////////////////////////
 	function log_out(){
 		unset($_SESSION['name']);
 	}
-//Ïîêàçàòè ñòàòò³//////////////////////////////////////////////////////////////////////////////////////////
-	function show_articles($connect){
-			$sql="SELECT *
-					FROM articles
-					ORDER BY id DESC";
-			$result=$connect->query($sql);
-			while($row=$result->fetch(PDO::FETCH_ASSOC)){
+//ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚Ð¸ ÑÑ‚Ð°Ñ‚Ñ‚Ñ–//////////////////////////////////////////////////////////////////////////////////////////
+	function show_articles($connect,$page_num,$page="main"){
+			$num=10*($page_num-1);
+			$sql=$connect->prepare("SELECT 	id,
+							login,
+							article,
+							header,
+							date
+					FROM 	articles
+					ORDER BY id DESC
+					LIMIT 10
+					OFFSET :num ");
+			$sql->bindParam(':num',$num,PDO::PARAM_INT);
+			$sql->execute();
+			while($row=$sql->fetch(PDO::FETCH_ASSOC)){
 				$login=$row['login'];
-			$art=$row['article'];
-			$num=$row['id'];
-			echo"From {$login}<p>{$art}</p>";
-			if($_SESSION['role']=="admin" or ($_SESSION['role']=="editor"and $_SESSION['name']==$login))
-				echo"<a href='index.php?id=edit_form&num={$num}'>Edit</a><br /><br /><br /><br />";
+				$art=$row['article'];
+				$header=$row['header'];
+				$date=$row['date'];
+				$num=$row['id'];
+				echo"<h3 id='art".$num."'><a href='index.php?id=articles&num=".$page_num."#art".$num."'>".$header."</a></h3>";
+				echo"<p align='left'>From {$login}</p>";
+				echo"<p align='left'>{$date}</p>";
+				if($page=="articles"){
+					echo"<p>".$art."</p>";
+					if($_SESSION['role']=="admin" or ($_SESSION['role']=="editor"and $_SESSION['name']==$login))
+					echo"<a href='index.php?id=edit_form&num={$num}'>EDIT</a>or maybe <a href='del_art.php?num={$num}'>DELETE</a><br /><br /><br /><br />";
+					$qstr="index.php?id=articles&num=";
+				}
+				else{
+					if(mb_strlen($art)>150){
+						for($i=149;$i<150;$i--){
+							if($art{$i}==" ")
+								break;
+						}
+						echo"<p>".substr($art,0,$i)."<a href='index.php?id=articles&num=".$page_num."#art".$num."'> ...READ MORE</a></p>";
+						echo"<br><br><br>";
+					}
+					else{
+						echo"<p>".$art."</p>";
+						echo"<br><br><br>";
+					}
+					$qstr="index.php?num=";
+				}
 			}
+			
+				$num=10*($page_num);
+				$sql->execute();
+				$row=$sql->fetch(PDO::FETCH_ASSOC);
+				echo"<p>";
+				if($page_num>1)
+					echo"<a href='".$qstr.($page_num-1)."'>&#60;&#60;&#60;Later</a>";
+				if(!empty($row))
+					  echo "    <a href='".$qstr.($page_num+1)."'>Older&#62;&#62;&#62;</a></p>";
+				echo"</p>";
+			
 	}
-		
-//Âèá³ð îäí³º¿ ñòàòò³ ç áàçè//////////////////////////////////////////////////////////////////////////////////
-	function get_art($connect,$id){
-		$sql="SELECT article
-				FROM articles
-				WHERE id=$id";
-		$result=$connect->query($sql);
-		$row=$result->fetch(PDO::FETCH_ASSOC);
+	// show_articles($connect,1);
+	/*function show_article($connect,$id){
+			$sql=$connect->prepare("SELECT 	login,
+							article,
+							header,
+							date
+					FROM 	articles
+					WHERE id=:id");
+			$sql->bindParam(':id',$id);
+			$sql->execute();
+			$row=$sql->fetch(PDO::FETCH_ASSOC);
+			$login=$row['login'];
+			$art=$row['article'];
+			$header=$row['header'];
+			$date=$row['date'];
+			echo"<h3>{$header}</h3>";
+			echo"<p align='left'>From {$login}</p>";
+			echo"<p align='left'>{$date}</p>";
+			echo"<p>{$art}</p>";
+			
+			if($_SESSION['role']=="admin" or ($_SESSION['role']=="editor"and $_SESSION['name']==$login))
+			echo"<a href='index.php?id=edit_form&num={$num}'>EDIT</a>or maybe <a href='del_art.php?num={$num}'>DELETE</a><br /><br /><br /><br />";
+	}*/
+///////////
+         function del_art($connect,$id){
+			$sql=$connect->prepare("DELETE FROM articles
+						WHERE id=:id");
+			$sql->bindParam(':id',$id);
+			$sql->execute();
+		 }		
+//Ð’Ð¸Ð±Ñ–Ñ€ Ð¾Ð´Ð½Ñ–Ñ”Ñ— ÑÑ‚Ð°Ñ‚Ñ‚Ñ– Ð· Ð±Ð°Ð·Ð¸//////////////////////////////////////////////////////////////////////////////////
+	function get_art($connect,$id,$toget="art"){
+		$sql=$connect->prepare("SELECT 	article,
+										header
+								FROM articles
+								WHERE id=:id");
+		$sql->bindParam(':id',$id,PDO::PARAM_INT);
+		$sql->execute();
+		$row=$sql->fetch(PDO::FETCH_ASSOC);
 		$art=$row['article'];
-		return $art;
+		$header=$row['header'];
+		if($toget=="header")
+			return $header;
+		else
+			return $art;
 	}
-//Ðåäàãóâàòè ñòàòòþ//////////////////////////////////////////////////////////////////////////////////////
-	function edit($connect,$id,$nart){
-		$sql="UPDATE articles
-				SET article='$nart'
-				WHERE id=$id";
-		$connect->exec($sql);
-		//mysql_query($sql) or die(mysql_error);
+//Ð ÐµÐ´Ð°Ð³ÑƒÐ²Ð°Ñ‚Ð¸ ÑÑ‚Ð°Ñ‚Ñ‚ÑŽ//////////////////////////////////////////////////////////////////////////////////////
+	function edit_art($connect,$id,$nart,$nhead){
+		$sql=$connect->prepare("UPDATE articles
+				SET article=:nart,
+					header=:nhead
+				WHERE id=:id");
+		$sql->bindParam(':nart',$nart,PDO::PARAM_STR);
+		$sql->bindParam(':nhead',$nhead,PDO::PARAM_STR);
+		$sql->bindParam(':id',$id,PDO::PARAM_INT);
+		$sql->execute();
 	}
-	
-//Äîäàòè Ñòàòòþ/////////////////////////////////////////////////////////////////////////////////////////////
-	function add_art($connect,$art,$name){
-		$sql="INSERT INTO articles(	article,
-									login)
-						VALUES(		'$art',
-									'$name')";
-		$connect->exec($sql);//mysql_query($sql)or die(mysql_error());
+//Ð”Ð¾Ð´Ð°Ñ‚Ð¸ Ð¡Ñ‚Ð°Ñ‚Ñ‚ÑŽ/////////////////////////////////////////////////////////////////////////////////////////////
+	function add_art($connect,$art,$header,$name){
+		$date=date("D, d M Y H:i:s");
+		$sql=$connect->prepare('INSERT INTO articles(login,
+													article,
+													header,
+													date)
+										VALUES(		:name,
+													:art,
+													:header,
+													:date)');
+		
+		$sql->bindParam(':art',$art,PDO::PARAM_STR);
+		$sql->bindParam(':header',$header,PDO::PARAM_STR);
+		$sql->bindParam(':date',$date,PDO::PARAM_STR);
+		$sql->bindParam(':name',$name,PDO::PARAM_STR);
+		$sql->execute();
 		return true;					
 	}
-//Âõ³ä êîðèñòóâà÷à///////////////////////////////////////////////////////////////////////////
+//Ð’Ñ…Ñ–Ð´ ÐºÐ¾Ñ€Ð¸ÑÑ‚ÑƒÐ²Ð°Ñ‡Ð°///////////////////////////////////////////////////////////////////////////
 	function enter($connect,$login,$password){
-		$sql="SELECT login,password,role
-				FROM people
-				WHERE login='$login'
-				AND password='$password'";
-		$result=$connect->query($sql);		
-		if($result->fetch(PDO::FETCH_ASSOC)!==FALSE){
-			$row=$result->fetch(PDO::FETCH_ASSOC);
+		$sql=$connect->prepare("SELECT login,password,role
+								FROM people
+								WHERE login=:login
+								AND password=:password");
+		$sql->bindParam(':login',$login,PDO::PARAM_STR);
+		$sql->bindParam(':password',$password,PDO::PARAM_STR);
+		$sql->execute();		
+		if($sql->fetch()!==FALSE){
+			$row=$sql->fetch(PDO::FETCH_ASSOC);
 			if($row['role']!=='locked'){
 				$_SESSION['name']=$login;
 				header("Location:{$_SERVER['HTTP_REFERER']}");
@@ -105,39 +204,44 @@ function change_language($connect,$text,$lang=false){
 			header("Location:index.php?id=enter_error");
 	}
 	
-//Ðåºñòðàö³ÿ//////////////////////////////////////////////////////////////
+//Ð ÐµÑ”ÑÑ‚Ñ€Ð°Ñ†Ñ–Ñ//////////////////////////////////////////////////////////////
 	function registration($connect,$login,$password,$email,$lang){
 		$date=date("D, d M Y H:i:s");
 	//login cheking
-		$sql="SELECT login,password,mail     
-				FROM people
-				WHERE login='{$login}'
-			";
-		$result=$connect->query($sql);
-		$row=$result->fetch(PDO::FETCH_ASSOC);
+		$sql=$connect->prepare("SELECT login,password,mail     
+								FROM people
+								WHERE login=:login");
+		$sql->bindParam(':login',$login,PDO::PARAM_STR);						
+		$sql->execute();
+		$row=$sql->fetch(PDO::FETCH_ASSOC);
 		
 		if($login==$row['login']){
 			echo"<p color='red'>".change_language($connect,'A user with this name already registered, please choose another',$lang)."!</p>";
 			exit();
 		}
 	 //mail cheking
-		$sql="SELECT login,password,mail     
-				FROM people
-				WHERE mail='{$email}'
-			";
-		$result=$connect->query($sql);
-		$row=$result->fetch(PDO::FETCH_ASSOC);
+		$sql=$connect->prepare("SELECT login,password,mail     
+								FROM people
+								WHERE mail=:email'
+							");
+		$sql->bindParam(':email',$email,PDO::PARAM_STR);						
+		$sql->execute();
+		$row=$sql->fetch(PDO::FETCH_ASSOC);
 		
 		if($email==$row['mail']){
 			echo"<p color='red'>".change_language($connect,'This e-mail already registered,check again please',$lang)."!</p>";
 			exit();
 		}
 	//add user to database
-		$sql="	INSERT INTO people(
-							login,password,mail,registration_date)
-						VALUES(
-							'$login','$password','$email','$date')";
-		$connect->exec($sql);//mysql_query($sql)or die(mysql_error());
+		$sql=$connect->prepare("	INSERT INTO people(
+												login,password,mail,registration_date)
+											VALUES(
+												:login,:password,:email,:date)");
+		$sql->bindParam(':login',$login,PDO::PARAM_STR);
+		$sql->bindParam(':password',$password,PDO::PARAM_STR);
+		$sql->bindParam(':email',$email,PDO::PARAM_STR);
+		$sql->bindParam(':date',$date);		
+		$sql->execute();
 		
 		$_SESSION['name']="$login";		
 		echo $_SESSION['name'].", ". change_language($connect,'You have successfully registered',$lang)."...<br />
@@ -145,11 +249,14 @@ function change_language($connect,$text,$lang=false){
 	}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	function insert($connect,$eng,$ukr,$rus){
-		$sql="INSERT INTO  main_articles(
-					eng_art,ukr_art,rus_art)
-				VALUES(
-					'$eng','$ukr','$rus')";
-		$connect->exec($sql);
+		$sql=$connect->prepare("INSERT INTO  main_articles(
+											eng_art,ukr_art,rus_art)
+										VALUES(
+											:eng,:ukr,:rus)");
+		$sql->bindParam(':eng',$eng,PDO::PARAM_STR);
+		$sql->bindParam(':ukr',$ukr,PDO::PARAM_STR);
+		$sql->bindParam(':rus',$rus,PDO::PARAM_STR);		
+		$sql->execute();
 	}
 	
 	
@@ -160,40 +267,47 @@ function change_language($connect,$text,$lang=false){
 			$data='ukr_art';
 		if($lang=='rus')
 			$data='rus_art';
-		$sql="SELECT {$data}
-				FROM main_articles
-			";
-		$result=$connect->query($sql);
-		$row=$result->fetch(PDO::FETCH_ASSOC);
+		$sql=$connect->prepare("SELECT :data
+									FROM main_articles
+								");
+		$sql->bindParam(':data',$data,PDO::PARAM_STR);
+		$sql->execute();
+		$row=$sql->fetch(PDO::FETCH_ASSOC);
 		$art=$row[$data];
 		return $art;
 	}
 ////////////////////////////////////////////////////////////////////////////////	
 function insert_w($connect,$eng,$ukr,$rus){
-		$sql="INSERT INTO  languages(
-					eng,ukr,rus)
-				VALUES(
-					'$eng','$ukr','$rus')";
-		$connect->exec($sql);
+		$sql=$connect->prepare("INSERT INTO  languages(
+											eng,ukr,rus)
+										VALUES(
+											:eng,:ukr,:rus)");
+		$sql->bindParam(':eng',$eng,PDO::PARAM_STR);
+		$sql->bindParam(':ukr',$ukr,PDO::PARAM_STR);
+		$sql->bindParam(':rus',$rus,PDO::PARAM_STR);
+		$sql->execute();
 		echo"</br>$eng,$ukr,$rus are added";
 	}	
 
 ////////////ADDED AND SHOW AVAtAR FUNCTIONs///////////////////
 function add_avatar($connect,$name,$fname){
 	$sql="UPDATE people
-			SET avatar='$fname'
-			WHERE login='$name'
+			SET avatar=:fname
+			WHERE login=:name
 				";
-	$connect->exec($sql);//mysql_query("$sql") or die(mysql_error());
+	$sql->bindParam(':fname',$fname,PDO::PARAM_STR);
+	$sql->bindParam(':name',$login,PDO::PARAM_STR);
+	$sql->execute();
 }
 
 function show_avatar($connect,$name){
-	$sql="SELECT avatar
-			FROM people
-			WHERE login='$name'
-		";
-	$result=$connect->query($sql);
-	$row=$result->fetch(PDO::FETCH_ASSOC);
+	$sql=$connect->prepare("SELECT avatar
+								FROM people
+								WHERE login=:name
+							");
+	$sql->bindParam(':name',$name,PDO::PARAM_STR);
+	$sql->execute();
+	$row=$sql->fetch(PDO::FETCH_ASSOC);
 	$ava=$row['avatar'];
 	if($ava==NULL)
 		echo"guest1.gif";
@@ -202,12 +316,13 @@ function show_avatar($connect,$name){
 }
 /////////////////////SHOW ROLE FUNCTION///////////
 function show_role($connect,$name){
-	$sql="SELECT role
-			FROM people
-			WHERE login='$name'
-		";
-	$result=$connect->query($sql);//mysql_query("$sql") or die(mysql_error());
-	$row=$result->fetch(PDO::FETCH_ASSOC);//mysql_fetch_assoc($result)or die(mysql_error());
+	$sql=$connect->prepare("SELECT role
+							FROM people
+							WHERE login=:name
+						");
+	$sql->bindParam(':name',$name,PDO::PARAM_STR);
+	$sql->execute();
+	$row=$sql->fetch(PDO::FETCH_ASSOC);
 	$role=$row['role'];
 	echo $role;
 }
@@ -215,54 +330,65 @@ function show_role($connect,$name){
 function edit_pers_data($connect,$name,$fname="",$lname="",$email="",$password="",$role=""){
 	if(!empty($role)){
 		if($role=="admin" or $role=="editor" or $role=="user" or $role=="locked" or $role=="authorless" ){
-			$sql="UPDATE people
-				SET role='$role'
-				WHERE login='$name'";
-			$connect->exec($sql);//mysql_query("$sql") or die(mysql_error());
+			$sql=$connect->prepare("UPDATE people
+									SET role=:role
+									WHERE login=:name");
+			$sql->bindParam(':role',$role,PDO::PARAM_STR);
+			$sql->bindParam(':name',$name,PDO::PARAM_STR);
+			$sql->execute();
 		}
 		else
 			die("<a href='index.php?id=edit_profile'>Please, enter correct role-name</a>");
 	}
 	if(!empty($fname)){
-		$sql="UPDATE people
-			SET first_name='$fname'
-			WHERE login='$name'
-				";
-	$connect->exec($sql);//mysql_query("$sql") or die(mysql_error());
+		$sql=$connect->prepare("UPDATE people
+								SET first_name=:fname
+								WHERE login=:name
+									");
+		$sql->bindParam(':fname',$fname,PDO::PARAM_STR);
+		$sql->bindParam(':name',$name,PDO::PARAM_STR);
+		$sql->execute();
 	}
 	if(!empty($lname)){
-		$sql="UPDATE people
-			SET last_name='$lname'
-			WHERE login='$name'
-				";
-	$connect->exec($sql);//mysql_query("$sql") or die(mysql_error());
+		$sql=$connect->prepare("UPDATE people
+								SET last_name='$lname'
+								WHERE login='$name'
+									");
+		$sql->bindParam(':lname',$lname,PDO::PARAM_STR);
+		$sql->bindParam(':name',$name,PDO::PARAM_STR);
+		$sql->execute();
 	}
 	if(!empty($email)){
-		$sql="UPDATE people
-			SET mail='$email'
-			WHERE login='$name'
-				";
-	$connect->exec($sql);//mysql_query("$sql") or die(mysql_error());
+		$sql=$connect->prepare("UPDATE people
+								SET mail=:email
+								WHERE login=:name
+									");
+		$sql->bindParam(':email',$email,PDO::PARAM_STR);
+		$sql->bindParam(':name',$name,PDO::PARAM_STR);
+		$sql->execute();
 	}
 	if(!empty($password)){
-		$sql="UPDATE people
-			SET password='$password'
-			WHERE login='$name'
-				";
-	$connect->exec($sql);//mysql_query("$sql") or die(mysql_error());
+		$sql=$connect->prepare("UPDATE people
+								SET password=:password
+								WHERE login=:name
+									");
+		$sql->bindParam(':password',$password,PDO::PARAM_STR);
+		$sql->bindParam(':name',$name,PDO::PARAM_STR);
+		$sql->execute();
 	}
 }
 ////////////show_pers_data
 function show_pers_data($connect,$name){
-	$sql="SELECT last_name,
-					first_name,
-					mail,
-					last_visiting,
-					registration_date
-			FROM people
-			WHERE login='$name'";
-	$result=$connect->query($sql);//mysql_query($sql)or die(mysql_error);
-	$row=$result->fetch(PDO::FETCH_ASSOC);//mysql_fetch_assoc($result) or die(mysql_error());
+	$sql=$connect->prepare("SELECT last_name,
+									first_name,
+									mail,
+									last_visiting,
+									registration_date
+							FROM people
+							WHERE login=:name");
+	$sql->bindParam(':name',$name,PDO::PARAM_STR);
+	$sql->execute();
+	$row=$sql->fetch(PDO::FETCH_ASSOC);//mysql_fetch_assoc($result) or die(mysql_error());
 	echo"<table>";
 	if(!empty($row['last_name']))
 		echo"<tr>
@@ -294,12 +420,13 @@ function show_pers_data($connect,$name){
 ////////////last visiting
 function  last_visiting($connect,$name){
 	$date=date("D, d M Y H:i:s");
-	$sql="UPDATE people
-			SET last_visiting='$date'
-			WHERE login='$name'";
-	$connect->exec($sql);//mysql_query($sql)or die(mysql_error());
+	$sql=$connect->prepare("UPDATE people
+							SET last_visiting=:date
+							WHERE login=:name");
+	$sql->bindParam(':date',$date);
+	$sql->bindParam(':name',$name);
+	$sql->execute();
 }
-	
 	////////////////////////////////////////////////////////////////////////////////////
 function show_names($connect){ 			// showing users names function
 	$count=0;
@@ -325,14 +452,16 @@ function show_names($connect){ 			// showing users names function
 	function set_role($connect,$name){
 		if($name=="")
 			return $_SESSION['role']="guest";
-		$sql="SELECT role
-				FROM people
-				WHERE login='$name'";
-		$result=$connect->query($sql);//mysql_query($sql)or die(mysql_error());
-		$row=$result->fetch(PDO::FETCH_ASSOC);//mysql_fetch_assoc($result)or die(mysql_error());
+		$sql=$connect->prepare("SELECT role
+								FROM people
+								WHERE login=:name");
+		$sql->bindParam(':name',$name);
+		$sql->execute();
+		$row=$sql->fetch(PDO::FETCH_ASSOC);//mysql_fetch_assoc($result)or die(mysql_error());
 		$_SESSION['role']=$row['role'];
 		return $_SESSION['role'];
 	}
+	 
 //////////////////////////////////////////////////////////////////////////
 function show_users($connect){
 	$count=0;
@@ -386,26 +515,12 @@ function show_users($connect){
 //////////////////////////////////////////////////////////////////////////////
 
 function delete_user($connect,$name){
-	$sql="DELETE 
-			FROM people
-			WHERE login='$name'";
-	$connect->exec($sql);//mysql_query($sql)or die(mysql_error());
+	$sql=$connect->prepare("DELETE 
+							FROM people
+							WHERE login=:name");
+	$sql->bindParam(':name',$name);
+	$sql->execute();
 }
-
-//unset($connect);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
