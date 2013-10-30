@@ -1,8 +1,8 @@
 <?php
 	$language=array(
-			"Eng"=>"eng.php",
-			"Укр"=>"ukr.php",
-			"Рос"=>"rus.php"
+			"Eng"=>"lang/eng.php",
+			"Укр"=>"lang/ukr.php",
+			"Рос"=>"lang/rus.php"
 	);
 	$menu1=array(
 		change_language($connect,'Home',$lang)=>"index.php",
@@ -25,7 +25,7 @@
 <table border="0" width="50%">
 	<tr>
 		<td colspan="3"align="center">
-			<img src="PTH.gif" width="90%" />
+			<img src="img/PTH.gif" width="90%" />
 		</td>
 	</tr>
 	<tr>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require"lib.inc.php";
+require"inc/lib.inc.php";
 
 $name="";
 if(isset($_SESSION['name']))
@@ -23,7 +23,7 @@ if(isset($_GET['num']))
 
 <html>
 <head>
-	<title>Metal Gym</title>
+	<title>Protest The Hero</title>
 	<meta charset=windows-1251" />
 	<style type="text/css" >
 		body{
@@ -45,7 +45,7 @@ if(isset($_GET['num']))
 <!--верхня частина сторінки-->
 		<p id="role">Hello,<?php echo $role?></p>
 		<?php 
-			include_once "top.inc.php";
+			include_once "inc/top.inc.php";
 		?>
 	</td>
 </tr>
@@ -54,28 +54,28 @@ if(isset($_GET['num']))
 <tr>
 	<td align="right" colspan="3">
 		<?php
-			include "enter_form.inc.php";
+			include "inc/enter_form.inc.php";
 		?>
 	</td>
 </tr>
 <?php
 	if($id=='profile'){
 		if(!empty($name)){
-			include("profile.php");
+			include"inc/profile.php";
 		}
 		else
 			echo"Please log in!";
 	}
 	elseif($id=='edit_profile'){
 		if(!empty($name)){
-			include("edit_profile.php");
+			include("inc/edit_profile.php");
 		}
 		else
 			echo"Please log in!";
 	}
 	elseif($id=='all_users'){
 		if(!empty($name)){
-			include("all_users.php");
+			include("inc/all_users.php");
 		}
 		else
 			echo"Please log in!";
@@ -98,20 +98,20 @@ if(isset($_GET['num']))
 		<?php
 			switch($id){
 				case'contacts':
-					include"contacts.php";break;
+					include"inc/contacts.php";break;
 				case'about':
-					include"about.php";break;
+					include"inc/about.php";break;
 				case'news':
-					include"news.php";break;
+					include"inc/news.php";break;
 				case'articles':
-					include"articles.php";break;
+					include"inc/articles.php";break;
 				case'registration':
-					include"registration.php";break;
+					include"inc/registration.php";break;
 				case'registration_form':
-					include"registration_form.php";break;
+					include"inc/registration_form.php";break;
 				case'art_form':
 					if(isset($name))
-						include"art_form.php";
+						include"inc/art_form.php";
 					else
 						echo change_language($connect,'You have to enter',$lang);
 					break;
@@ -124,11 +124,11 @@ if(isset($_GET['num']))
 						show_articles($connect,$page_num);
 					break;
 				case'edit_form':
-					include"edit_form.php";break;
+					include"inc/edit_form.php";break;
 				case'main_art_form':
-					include"main_art_form.php";break;
+					include"inc/main_art_form.php";break;
 				case'edit_pers_data':
-					include"edit_pers_data.php";break;
+					include"inc/edit_pers_data.php";break;
 				default:
 					echo show_articles($connect,$page_num);
 			}
@@ -154,7 +154,7 @@ if(isset($_GET['num']))
 <tr>
 	<td colspan="3" align="center" valign="bottom">
 		<?php
-			//include "bottom.inc.php";
+			//include "inc/bottom.inc.php";
 		?>
 	</td>
 </tr>

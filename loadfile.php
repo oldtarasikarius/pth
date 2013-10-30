@@ -1,7 +1,6 @@
 <?php
-
 session_start();
-require("lib.inc.php");
+require("inc/lib.inc.php");
 
 
 if(isset($_SESSION['name'])){
@@ -18,10 +17,10 @@ if(isset($_SESSION['name'])){
 	}
 
 	if(isset($_FILES['userfile'])){	
-		if(!is_dir("C:/Users/Public/SERVER/Apache2.2/htdocs/test/photos/$link_name"))
-			mkdir("C:/Users/Public/SERVER/Apache2.2/htdocs/test/photos/$link_name");
+		if(!is_dir("C:/Users/Public/SERVER/Apache2.2/htdocs/pth/img/photos/$link_name"))
+			mkdir("C:/Users/Public/SERVER/Apache2.2/htdocs/pth/img/photos/$link_name");
 
-		$fname="photos/".$link_name."/".$link_name; 
+		$fname="img/photos/".$link_name."/".$link_name; 
 		$tmp_name=$_FILES['userfile']['tmp_name'];
 		$_SESSION['fname']=$fname;
 		if(move_uploaded_file($tmp_name,$fname)){

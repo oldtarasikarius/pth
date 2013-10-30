@@ -1,5 +1,5 @@
 <?php
-	$connect= new PDO('mysql:host=localhost;dbname=metal_gym','root','ppp');
+	$connect= new PDO('mysql:host=localhost;dbname=pth','root','ppp');
 
 //Зміна мови//////////////////////////////////////////////////////////////////////////////
 function change_language($connect,$text,$lang=false){
@@ -108,29 +108,6 @@ function change_language($connect,$text,$lang=false){
 				echo"</p>";
 			
 	}
-	// show_articles($connect,1);
-	/*function show_article($connect,$id){
-			$sql=$connect->prepare("SELECT 	login,
-							article,
-							header,
-							date
-					FROM 	articles
-					WHERE id=:id");
-			$sql->bindParam(':id',$id);
-			$sql->execute();
-			$row=$sql->fetch(PDO::FETCH_ASSOC);
-			$login=$row['login'];
-			$art=$row['article'];
-			$header=$row['header'];
-			$date=$row['date'];
-			echo"<h3>{$header}</h3>";
-			echo"<p align='left'>From {$login}</p>";
-			echo"<p align='left'>{$date}</p>";
-			echo"<p>{$art}</p>";
-			
-			if($_SESSION['role']=="admin" or ($_SESSION['role']=="editor"and $_SESSION['name']==$login))
-			echo"<a href='index.php?id=edit_form&num={$num}'>EDIT</a>or maybe <a href='del_art.php?num={$num}'>DELETE</a><br /><br /><br /><br />";
-	}*/
 ///////////
          function del_art($connect,$id){
 			$sql=$connect->prepare("DELETE FROM articles
@@ -291,12 +268,12 @@ function insert_w($connect,$eng,$ukr,$rus){
 
 ////////////ADDED AND SHOW AVAtAR FUNCTIONs///////////////////
 function add_avatar($connect,$name,$fname){
-	$sql="UPDATE people
-			SET avatar=:fname
-			WHERE login=:name
-				";
+	$sql=$connect->prepare("UPDATE people
+							SET avatar= :fname
+							WHERE login= :name
+								");
 	$sql->bindParam(':fname',$fname,PDO::PARAM_STR);
-	$sql->bindParam(':name',$login,PDO::PARAM_STR);
+	$sql->bindParam(':name',$name,PDO::PARAM_STR);
 	$sql->execute();
 }
 
@@ -310,7 +287,7 @@ function show_avatar($connect,$name){
 	$row=$sql->fetch(PDO::FETCH_ASSOC);
 	$ava=$row['avatar'];
 	if($ava==NULL)
-		echo"guest1.gif";
+		echo"img/guest1.gif";
 	else
 		echo $ava;
 }
@@ -484,7 +461,7 @@ function show_users($connect){
 	while($row=$result->fetch(PDO::FETCH_ASSOC)){
 		
 		if($row['avatar']==NULL)
-			$ava="guest1.gif";
+			$ava="img/guest1.gif";
 		else
 			$ava=$row['avatar'];
 		echo"<image src=".$ava." width='130' height='150' style='float:left;margin-right:20px;margin-top: 20px'>";

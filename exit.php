@@ -1,6 +1,6 @@
 <?php
 session_start();
-require "lib.inc.php";
+require "inc/lib.inc.php";
 $name=$_SESSION['name'];
 last_visiting($connect,$name);
 unset($_SESSION['name']);

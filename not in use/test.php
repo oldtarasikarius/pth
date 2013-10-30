@@ -1,5 +1,5 @@
 <?php
-require"lib.inc.php";
+require"inc/lib.inc.php";
 //echo date("D, d M Y H:i:s");
 ?>
 <table>

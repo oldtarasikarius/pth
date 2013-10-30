@@ -1,6 +1,6 @@
 <?php
 
-include"lib.inc.php";
+include"inc/lib.inc.php";
 if($_SERVER['REQUEST_METHOD']=='POST'){
 	if(!empty($_POST['eng_art']) or !empty($_POST['ukr_art']) or !empty($_POST['rus_art'])){
 		$eng=clear_data($_POST['eng_art']);

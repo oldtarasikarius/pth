@@ -1,5 +1,5 @@
 <?php
-include "lib.inc.php";
+include "inc/lib.inc.php";
 	
 if($_SERVER['REQUEST_METHOD']=='POST'){		
 	$nart=clear_data($_POST['art']);

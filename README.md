@@ -1,4 +1,4 @@
-metal_gym
+Protest the Hero
 =========
-test files for "metal gym"
+test files for "protest the hero"
 kind of edition)

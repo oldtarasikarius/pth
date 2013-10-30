@@ -1,6 +1,6 @@
 <?php
 session_start();
-include"lib.inc.php";
+include"inc/lib.inc.php";
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 

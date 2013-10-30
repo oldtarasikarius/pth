@@ -1,24 +1,34 @@
 <?php
-
+	//$dbh=new PDO('mysql:host=localhost;dbname=pth','root','ppp');
 	mysql_connect("localhost","root","ppp") or die(mysql_error());
 	//mysql_query("USE metal_gym") or die(mysql_error());
-	//mysql_query("DROP DATABASE metal_gym") or die(mysql_error());
-	$sql="CREATE DATABASE metal_gym";
+	//mysql_query("DROP DATABASE pth") or die(mysql_error());
+	$sql="CREATE DATABASE pth";
 	mysql_query($sql) or die(mysql_error());
 	
-	mysql_select_db('metal_gym')or die(mysql_error());
+	mysql_select_db('pth')or die(mysql_error());
 	
 	$sql="CREATE TABLE people(
-			login 		VARCHAR(20) NOT NULL PRIMARY KEY,
-			password 	VARCHAR(50) NOT NULL,
-						UNIQUE(login, password)
-	)";
+			login 				VARCHAR(20) NOT NULL PRIMARY KEY,
+			password 			VARCHAR(50) NOT NULL,
+			role 				VARCHAR(30) DEFAULT 'user',
+			last_name			VARCHAR(300),
+			first_name			VARCHAR(300),
+			mail				VARCHAR(300),
+			avatar				VARCHAR(300),
+			registration_date	VARCHAR(50),
+			last_visiting		VARCHAR(50),
+		UNIQUE(login, password))
+	";
 	mysql_query($sql) or die(mysql_error());
 
 	$sql="CREATE TABLE articles(
 			id 		INT NOT NULL auto_increment,
-			article TEXT NOT NULL,
 			login 	VARCHAR(20) NOT NULL,
+			article TEXT NOT NULL,
+			header 	VARCHAR(200) DEFAULT 'Untitled',
+			date	VARCHAR(50),
+			
 					PRIMARY KEY(id)
 	)";
 	mysql_query($sql) or die(mysql_error());
@@ -32,7 +42,7 @@
 	)";
 	mysql_query($sql) or die(mysql_error());
 	
-	$sql="CREATE TABLE main_articles(
+	/*$sql="CREATE TABLE main_articles(
 			id 			INT NOT NULL PRIMARY KEY auto_increment,
 			eng_art 	TEXT,
 			ukr_art 	TEXT,
@@ -40,7 +50,7 @@
 	)";
 	mysql_query($sql)or die(mysql_error());
 
-	mysql_close();
+	mysql_close();*/
 	
-	//echo"<p>Структура бази данних успішно створена)</p>";
+	echo"<p>Структура бази данних успішно створена</p>";
 ?>

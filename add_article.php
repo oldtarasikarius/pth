@@ -3,7 +3,7 @@ session_start();
 $lang="eng";
 if(isset($_SESSION['lang']))
 	$lang=$_SESSION['lang'];
-include"lib.inc.php";
+include"inc/lib.inc.php";
 	if(isset($_SESSION['name'])){
 		$name=$_SESSION['name'];
 		if($_SERVER['REQUEST_METHOD']=='POST'){
