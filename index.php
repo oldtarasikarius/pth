@@ -23,67 +23,27 @@ if(isset($_GET['num']))
 
 <html>
 <head>
-	<title>Protest The Hero</title>
+	<title>protest the hero(test)</title>
 	<meta charset=windows-1251" />
-	<style type="text/css" >
-		body{
-			margin:50px 100px 50px 100px;
-		}
-		#role{
-			margin-top:0;
-			float:right;
-		}
-	</style>
+	<link rel="stylesheet" href="style.css" >
 </head>
 
 <body>
-<table border="0" width="100%" > 
-
-	
-<tr>
-	<td colspan="3" align="center">
-<!--верхня частина сторінки-->
-		<p id="role">Hello,<?php echo $role?></p>
+ 
+<div class="top"><!--верхня частина сторінки-->
+	<p id="role">Hello,<?php echo $role?></p>
 		<?php 
 			include_once "inc/top.inc.php";
 		?>
-	</td>
-</tr>
+</div>
 
 <!--Форма входу-->
-<tr>
-	<td align="right" colspan="3">
 		<?php
 			include "inc/enter_form.inc.php";
 		?>
-	</td>
-</tr>
-<?php
-	if($id=='profile'){
-		if(!empty($name)){
-			include"inc/profile.php";
-		}
-		else
-			echo"Please log in!";
-	}
-	elseif($id=='edit_profile'){
-		if(!empty($name)){
-			include("inc/edit_profile.php");
-		}
-		else
-			echo"Please log in!";
-	}
-	elseif($id=='all_users'){
-		if(!empty($name)){
-			include("inc/all_users.php");
-		}
-		else
-			echo"Please log in!";
-	}
-	else{
-?>
-<tr>
-	<td width="25%"align="left" valign="top"><!--ліве меню-->
+<!--ліве меню-->
+<div id="middle_body">
+	<div id='left_menu'>
 		<?php
 			if($role!=="guest"){
 				echo"<ul>";
@@ -92,9 +52,9 @@ if(isset($_GET['num']))
 				<a href='index.php?id=all_users'><p>All users</p></a>";
 			}
 		?>
-	</td>
-	<td align="center">
+	</div>
 <!--основний контент-->
+	<div class='content'>
 		<?php
 			switch($id){
 				case'contacts':
@@ -127,38 +87,44 @@ if(isset($_GET['num']))
 					include"inc/edit_form.php";break;
 				case'main_art_form':
 					include"inc/main_art_form.php";break;
+				case'profile':	
+					if(!empty($name)){
+						include"inc/profile.php";
+					}
+					else
+						echo"Please log in!";break;
+				case'edit_profile':
+					if(!empty($name)){
+						include("inc/edit_profile.php");
+					}
+					else
+						echo"Please log in!";break;
+				case'all_users':
+					if(!empty($name)){
+						include("inc/all_users.php");
+					}
+					else
+						echo"Please log in!";break;
 				case'edit_pers_data':
 					include"inc/edit_pers_data.php";break;
 				default:
 					echo show_articles($connect,$page_num);
 			}
 		?>
-	</td>
-	<td width="25%" align="center" valign="top">
+	</div>
 	<!--праве меню-->
-		<table>
-			<tr>
-				<td>
+	<div id='right_menu'>
 				<?php
 					if(!empty($name) and ($role=='admin'or $role=='editor'))
 						echo"<a href='index.php?id=art_form'>".change_language($connect,'Add article',$lang)."<a>";
-					?>
-				</td>
-			</tr>
-		</table>
-	</td>
-</tr>
-<?php
-		}
-?>		
-<tr>
-	<td colspan="3" align="center" valign="bottom">
+				?>
+	</div>
+</div>
+<div>
 		<?php
 			//include "inc/bottom.inc.php";
 		?>
-	</td>
-</tr>
-</table>
-
+	
+</div>
 </body>
 </html>

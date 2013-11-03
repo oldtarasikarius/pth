@@ -7,23 +7,10 @@ if($_SERVER['REQUEST_METHOD']=='GET'){
 		die(change_language($connect,'You have to register',$lang));
 }
 ?>
-<form action="edit_art.php?num=<?=$num?>" method="POST">
-	<table>
-		<tr>
-			<td width="100%">
-				<input type="text" name="header" value="<?php echo get_art($connect,$num,"header")?>" size="100%">
-			</td>
-		</tr>
-		<tr>
-			<td width="100%">
-				<textarea name="art" cols="100%" rows="15%">
-				<?php echo get_art($connect,$num)?>
-				</textarea>
-			</td>
-		<tr>
-			<td align="right">
-				<input type="submit" value="<?=change_language($connect,'Edit',$lang)?>" />
-			</td>
-		</tr>
-	</table>
+<form action="edit_art.php?num=<?=$num?>" method="POST"  class='art_form'>
+	<input type="text" name="header" value="<?php echo get_art($connect,$num,"header")?>" size="90%">
+		<textarea name="art" cols="81" rows="15">
+			<?php echo get_art($connect,$num)?>
+		</textarea>
+	<input type="submit" value="<?=change_language($connect,'Edit',$lang)?>" />
 </form>

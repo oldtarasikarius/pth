@@ -21,31 +21,25 @@
 		change_language($connect,'Exit',$lang)=>"exit.php"
 	);
 ?>
-
-<table border="0" width="50%">
-	<tr>
-		<td colspan="3"align="center">
-			<img src="img/PTH.gif" width="90%" />
-		</td>
-	</tr>
-	<tr>
-		<td  colspan="2">
-			<?php
-				if(!empty($name)){
-					if(!getMenu($menu2,false,'30px'))
-						echo"...".change_language($connect,'something is going wrong',$lang);
-				}
-				else{
-					if(!getMenu($menu1,false,'30px'))
-						echo"...".change_language($connect,'something is going wrong',$lang);
-				}
-			?>
-		</td>
-		<td  >
-			<?php
-				if(!getMenu($language,false))
-					echo"...".change_language($connect,'something is going wrong',$lang);
-			?>
-		</td>
-	</tr>
-</table>
+	
+<img src="img/PTH.gif" id='main_img' />
+	
+<div id='main_menu'>
+	<?php
+		if(!empty($name)){
+			if(!getMenu($menu2,false))
+				echo"...".change_language($connect,'something is going wrong',$lang);
+		}
+		else{
+			if(!getMenu($menu1,false))
+				echo"...".change_language($connect,'something is going wrong',$lang);
+		}
+	?>
+</div>
+<div id='lang_menu'>	
+	<?php
+		if(!getMenu($language,false))
+			echo"...".change_language($connect,'something is going wrong',$lang);
+	?>
+</div>
+			

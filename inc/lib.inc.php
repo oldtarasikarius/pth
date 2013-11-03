@@ -38,7 +38,7 @@ function change_language($connect,$text,$lang=false){
 			$style="style='display:inline;margin-right:15px'";
 		echo"<ul style='list-style-type:none'>";
 			foreach($menu as $link=>$href){			
-				echo"<li ".$style."><a href='".$href."'>".$link."</li>";
+				echo"<li ".$style."><a href='".$href."'>".$link."</a></li>";
 			}	
 		echo"</ul>";
 		return true;
@@ -108,6 +108,29 @@ function change_language($connect,$text,$lang=false){
 				echo"</p>";
 			
 	}
+	// show_articles($connect,1);
+	/*function show_article($connect,$id){
+			$sql=$connect->prepare("SELECT 	login,
+							article,
+							header,
+							date
+					FROM 	articles
+					WHERE id=:id");
+			$sql->bindParam(':id',$id);
+			$sql->execute();
+			$row=$sql->fetch(PDO::FETCH_ASSOC);
+			$login=$row['login'];
+			$art=$row['article'];
+			$header=$row['header'];
+			$date=$row['date'];
+			echo"<h3>{$header}</h3>";
+			echo"<p align='left'>From {$login}</p>";
+			echo"<p align='left'>{$date}</p>";
+			echo"<p>{$art}</p>";
+			
+			if($_SESSION['role']=="admin" or ($_SESSION['role']=="editor"and $_SESSION['name']==$login))
+			echo"<a href='index.php?id=edit_form&num={$num}'>EDIT</a>or maybe <a href='del_art.php?num={$num}'>DELETE</a><br /><br /><br /><br />";
+	}*/
 ///////////
          function del_art($connect,$id){
 			$sql=$connect->prepare("DELETE FROM articles
@@ -464,8 +487,8 @@ function show_users($connect){
 			$ava="img/guest1.gif";
 		else
 			$ava=$row['avatar'];
-		echo"<image src=".$ava." width='130' height='150' style='float:left;margin-right:20px;margin-top: 20px'>";
-		echo"<ul style='list-style-type:none'><li>Login:".$row['login']."</li>";
+		echo"<image src=".$ava." id='all_us_pic'>";
+		echo"<div id='all_us_info'><ul class='non_mark_list'><li>Login:".$row['login']."</li>";
 			echo"<li>Role:".$row['role']."</li>";
 			echo"<li>First Name:".$row['first_name']."</li>";
 			echo"<li>Last Name:".$row['last_name']."</li>";
@@ -476,14 +499,8 @@ function show_users($connect){
 			echo"<li>Last Visiting:".$row['last_visiting']."</li>";
 		if($_SESSION['role']=='admin'){
 			echo"<li><a href='delete_user.php?link=".$row['login']."'>Delete</a> or maybe <a href='index.php?id=edit_profile&link=".$row['login']."'>Edit</a>  </li>";
-		}
-			
-		echo"</ul><hr>";	
-		
-		//else
-			//echo"</ul><br><hr>";
-			
-			
+		}			
+		echo"</ul></div><hr>";	
 		$count++;
 		IF($count==$num)
 			break;		
@@ -497,9 +514,5 @@ function delete_user($connect,$name){
 							WHERE login=:name");
 	$sql->bindParam(':name',$name);
 	$sql->execute();
-}
-
-
-
-	
+}	
 	?>

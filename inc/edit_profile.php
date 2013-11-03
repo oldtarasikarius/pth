@@ -4,59 +4,37 @@ if($_SESSION['role']=="authorless")
 if(isset ($_GET['link']))
 	$link_name=clear_data($_GET['link']);
 else
-	$link_name=$name;
-	
+	$link_name=$name;	
 ?>
-		<tr>
-			<td width="20%"></td>
-			<td align="left" width="15%">
-				<ul style='list-style-type:none' >
-						<li><image src=<?php
-											show_avatar($connect,$link_name);
-										?> width=150 height=150>
-						</li>
-						<li>
-							<form enctype='multipart/form-data' action='loadfile.php?link=<?=$link_name?>' method='post'>
-							<input type='file' name='userfile' ><br>
-							<input type='submit' value='Add'>
-							</form>
-						</li>
-					</ul>
-			</td>
-			<td align="left">
-				<table>
-					<form action="index.php?id=edit_pers_data&link=<?=$link_name?>" method="post">
-						<tr>
-							<td><input type="text" name="lname" placeholder="Enter your last name"></td>
-							<td>Last Name</td>
-						</tr>	
-						<tr>
-							<td><input type="text" name="fname" placeholder="Enter your first name"></td>
-							<td>First Name</td>
-						</tr>
-						<tr>
-							<td><input type="text" name="email" placeholder="Change e-mail address"></td>
-							<td>E-mail</td>
-						</tr>
-						<tr>
-							<td><input type="password" name="password" placeholder="Change the password"></td>
-							<td>Password</td>
-						</tr>
-						<tr>
-							<td><input type="password" name="repeat_password" placeholder="Confirm new password"></td>
-							<td>Confirm Password</td>
-						</tr>
-						<?php if($role=="admin"){?>
-						<tr>
-							<td><input type="text" name="new_role" placeholder="Enter new role for this user"></td>
-							<td>New Role</td>
-						</tr><?php } ?>
-						<tr>
-							<td  ><input type="Submit"  value="SUBMIT"></td>
-							<td ><input type="reset"  value="CANCEL"></td>							
-						</tr>
-					</form>
-				</table>
-			</td>
-			<td width="20%"></td>
-		</tr>
+<div class='change_ava_form'>
+	<image src=<?php
+		show_avatar($connect,$link_name);
+	?> width=150 height=150>
+	
+	<form enctype='multipart/form-data' action='loadfile.php?link=<?=$link_name?>' method='post'>
+		<input type='file' name='userfile' ><br>
+		<input type='submit' value='Add'>
+	</form>
+</div>
+			
+<div class='change_info_form'>
+	<form action="index.php?id=edit_pers_data&link=<?=$link_name?>" method="post">
+		<p><input type="text" name="lname" placeholder="Enter your last name">
+			Last Name</p>
+		<p><input type="text" name="fname" placeholder="Enter your first name">
+			First Name</p>
+		<p><input type="text" name="email" placeholder="Change e-mail address">
+			E-mail</p>
+		<p><input type="password" name="password" placeholder="Change the password">
+			Password</p>
+		<p><input type="password" name="repeat_password" placeholder="Confirm new password">
+			Confirm Password</p>
+		<?php if($role=="admin"){?>
+		<p><input type="text" name="new_role" placeholder="Enter new role for this user">
+			New Role</p>
+		<?php } ?>
+		
+		<input type="Submit"  value="SUBMIT">
+		<input type="reset"  value="CANCEL">							
+	</form>
+</div>
