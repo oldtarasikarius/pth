@@ -2,7 +2,7 @@
 	if(!empty($name)){	
 ?>
 	<div id='user'>
-	<image src=<?=show_avatar($connect,$name)?> class="ava">
+	<img src='<?=show_avatar($connect,$name)?>' alt='avatar' class="ava">
 	<br /><a href='index.php?id=profile'><?=$name?></a> 
 	</div>
 <?php	

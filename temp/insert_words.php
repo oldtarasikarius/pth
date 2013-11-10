@@ -1,36 +1,37 @@
 <?php
-require("../lib.inc.php");
+require("../inc/lib.inc.php");
 
-/*insert_w('login must filled out','ви не ввели логін','введите логин');	
-insert_w('You have to enter','Вам потрібно увійти','Вы должны войти');
-insert_w('A combination of user name and password was not found, check the data, please','Данної комбінації не існує, перевірте дані й спробуйте ще раз','Этой комбинации логина и пароля не сущевствует, проверте данные');
-insert_w('Add article','Додати статтю','Добавить статью');
-insert_w('something is going wrong','щось пішло не так','Что-то не так');
-insert_w('Previous page','попередня сторінка','Предыдущая страница');
-insert_w('Add','Додати','Добавить');
-insert_w('You have to register','Вам потрібно зареєструватись','Вам нужно зарегистрироватся');
-insert_w('Edit','Редагувати','Изменить');
-insert_w('Hello','Привіт','Здравствуй');
-insert_w('Exit','Вихід','Выход');
-insert_w('Registration','Реєстрація','Регистрация');
-insert_w('Login','Логін','Логин');
-insert_w('Password','Пароль','Пароль');
-insert_w('Enter','Вхід','Вход');
-insert_w('Enter your nickname','Введіть логін','Введите ваш логин');
-insert_w('Enter your password','Введіть пароль','Введите пароль');
-insert_w('Home','Головна','Главная');
-insert_w('Contacts','Контакти','Контакты');
-insert_w('About Us','Про нас','О нас');
-insert_w('News','Новини','Новости');
-insert_w('Articles','Статті','Статьи');
-insert_w('Register','Зареєструватись','Зарегистрироватся');
-insert_w('You have successfully registered','Ви успішно зареєструвались','Вы успешно зарегистрировались');
-insert_w('Return to main page','Повернутись на головну','Вернуться на главную');
-insert_w('A user with this name already registered, please choose another','Користувач з таким ім`ям вже зареєстрований, будь-ласка, виберіть інше','Пользователь с таким именем уже зарегистрирован, пожалуйста, выберите другой');
-insert_w('E-mail','Електронна адреса','Электронный адрес');
 
-insert_w('Repeat Password','Перевірка паролю','Проверка пароля');
-*/
-insert_w('This e-mail already registered,check again please','Дана адресе вже зареєстрована, будь-ласка вибиріть іншу','Этот адрес уже зарегистрирован, пожалуйста проверьте правильность набора');
+ insert_w($connect,'login must filled out','РІРё РЅРµ РІРІРµР»Рё Р»РѕРіС–РЅ');	
+insert_w($connect,'You have to enter','Р’Р°Рј РїРѕС‚СЂС–Р±РЅРѕ Р°РІС‚РѕСЂРёР·СѓРІР°С‚РёСЃСЊ');
+insert_w($connect,'A combination of user name and password was not found, check the data, please','Р”Р°РЅР° РєРѕРјР±С–РЅР°С†С–СЏ Р»РѕРіС–РЅСѓ С‚Р° РїР°СЂРѕР»СЋ РЅРµ Р·РЅР°Р№РґРµРЅР°, РїРµСЂРµРІС–СЂС‚Рµ РїСЂР°РІРёР»СЊРЅС–СЃС‚СЊ РІРІРµРґРµРЅРёС… РґР°РЅРёС…');
+insert_w($connect,'Add article','Р”РѕРґР°С‚Рё СЃС‚Р°С‚С‚СЋ');
+insert_w($connect,'something is going wrong','С‰РѕСЃСЊ РїС–С€Р»Рѕ РЅРµ С‚Р°Рє(');
+insert_w($connect,'Previous page','РџРѕРїРµСЂРµРґРЅСЏ СЃС‚РѕСЂС–РЅРєР°');
+insert_w($connect,'Add','Р”РѕРґР°С‚Рё');
+insert_w($connect,'You have to register','Р’Р°Рј РїРѕС‚СЂС–Р±РЅРѕ Р·Р°СЂРµС”СЃС‚СЂСѓРІР°С‚РёСЃСЊ');
+insert_w($connect,'Edit','Р РµРґР°РіСѓРІР°С‚Рё');
+insert_w($connect,'Hello','РџСЂРёРІС–С‚');
+insert_w($connect,'Exit','Р’РёС…С–Рґ');
+insert_w($connect,'Registration','Р РµС”СЃС‚СЂР°С†С–СЏ');
+insert_w($connect,'Login','Р›РѕРіС–РЅ');
+insert_w($connect,'Password','РџР°СЂРѕР»СЊ');
+insert_w($connect,'Enter','РЈРІС–Р№С‚Рё');
+insert_w($connect,'Enter your nickname','Р’РІРµРґС–С‚СЊ СЃРІС–Р№ РЅС–РєРЅРµР№Рј');
+insert_w($connect,'Enter your password','Р’РІРµРґС–С‚СЊ РїР°СЂРѕР»СЊ');
+insert_w($connect,'Home','Р“РѕР»РѕРІРЅР°');
+insert_w($connect,'Contacts','РљРѕРЅС‚Р°РєС‚Рё');
+insert_w($connect,'About Us','РџСЂРѕ РЅР°СЃ');
+insert_w($connect,'News','РќРѕРІРёРЅРё');
+insert_w($connect,'Articles','РЎС‚Р°С‚С‚С–');
+insert_w($connect,'Register','Р РµС”СЃС‚СЂР°С†С–СЏ');
+insert_w($connect,'You have successfully registered','Р’Рё СѓСЃРїС–С€РЅРѕ Р·Р°СЂРµС”СЃС‚СЂСѓРІР°Р»С‚СЃСЊ');
+insert_w($connect,'Return to main page','РџРѕРІРµСЂРЅСѓС‚РёСЃСЏ РЅР° РіРѕР»РѕРІРЅСѓ');
+insert_w($connect,'A user with this name already registered, please choose another','РљРѕСЂРёСЃС‚СѓРІР°С‡ Р· РґР°РЅРёРј С–РјвЂ™СЏРј РІР¶Рµ Р·Р°СЂРµС”СЃС‚СЂРѕРІР°РЅРёР№, РІРёР±РµСЂС–С‚СЊ С–РЅС€Рµ');
+insert_w($connect,'E-mail','Р•Р»РµРєС‚СЂРѕРЅРЅР° РїРѕС€С‚Р°');
+
+insert_w('Repeat Password','РџС–РґС‚РІРµСЂРґС–С‚СЊ РїР°СЂРѕР»СЊ');
+/*//
+//insert_w('This e-mail already registered,check again please','');*/
 
 ?>

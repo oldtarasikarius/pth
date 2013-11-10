@@ -50,28 +50,7 @@
 			ukr_art 	TEXT,
 			rus_art 	TEXT
 	)";
-	mysql_query($sql)or die(mysql_error());*/
-	
-	$sql="CREATE TABLE comments(
-			id 		INT NOT NULL auto_increment,
-			language	VARCHAR(20) NOT NULL,
-			login 		VARCHAR(20) NOT NULL,
-			art_num		INT NOT NULL,
-			subject 	VARCHAR(200),
-			comment		VARCHAR(2000),
-			date		VARCHAR(50),
-				PRIMARY KEY(id)
-	)";
-	mysql_query($sql) or die(mysql_error());
-  
-  $sql="CREATE TABLE art_rating(
-			id 		INT NOT NULL auto_increment,
-			login 		VARCHAR(20) NOT NULL,
-			art_num		INT NOT NULL,
-			mark      INT NOT NULL,
-				PRIMARY KEY(id)
-	)";
-	mysql_query($sql) or die(mysql_error());
+	mysql_query($sql)or die(mysql_error());
 
 	mysql_close();
 	

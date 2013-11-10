@@ -24,24 +24,24 @@ if(isset($_GET['num']))
 <html>
 <head>
 	<title>protest the hero(test)</title>
-	<meta charset=windows-1251" />
-	<link rel="stylesheet" href="style.css" >
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="css/style.css" >
 </head>
 
 <body>
  
-<div class="top"><!--верхня частина сторінки-->
-	<p id="role">Hello,<?php echo $role?></p>
+<div class="top"><!--////////////////////////////// HEADER OF THE PAGE////////////////////-->
+	<p id="role"><?php echo change_language($connect,'Hello',$lang).", ".change_language($connect,$role,$lang); ?></p>
 		<?php 
 			include_once "inc/top.inc.php";
 		?>
 </div>
 
-<!--Форма входу-->
+                             <!--////////////////////////ENTER FORM//////////////////-->
 		<?php
 			include "inc/enter_form.inc.php";
 		?>
-<!--ліве меню-->
+                           <!--///////////////////////////LEFT MENU///////////////////////-->
 <div id="middle_body">
 	<div id='left_menu'>
 		<?php
@@ -49,24 +49,37 @@ if(isset($_GET['num']))
 				echo"<ul>";
 				show_names($connect);
 				echo"</ul>
-				<a href='index.php?id=all_users'><p>All users</p></a>";
+				<a href='index.php?id=all_users'><p>".change_language($connect,'All users',$lang)."</p></a>";
 			}
 		?>
 	</div>
-<!--основний контент-->
+<!--/////////////////////////////////MAIN CONTENT////////////////////////////////////-->
 	<div class='content'>
 		<?php
 			switch($id){
 				case'contacts':
-					include"inc/contacts.php";break;
+					if (!is_file("inc/contacts.php")) {
+						echo "No such file";break;
+					}
+					else{
+						include"inc/contacts.php";break;
+					}
 				case'about':
-					include"inc/about.php";break;
+					if (!is_file("inc/about.php")) {
+						echo "No such file";break;
+					}
+					else{
+						include"inc/about.php";break;
+					}
 				case'news':
-					include"inc/news.php";break;
+					if (!is_file("inc/news.php")) {
+						echo "No such file";break;
+					}
+					else{
+						include"inc/news.php";break;
+					}
 				case'articles':
 					include"inc/articles.php";break;
-				case'registration':
-					include"inc/registration.php";break;
 				case'registration_form':
 					include"inc/registration_form.php";break;
 				case'art_form':
@@ -75,9 +88,15 @@ if(isset($_GET['num']))
 					else
 						echo change_language($connect,'You have to enter',$lang);
 					break;
+				case'translation_form':
+					if(isset($name))
+						include"inc/translation_form.php";
+					else
+						echo change_language($connect,'You have to enter',$lang);
+					break;
 				case'enter_error':	
 					if(empty($name)){
-						echo"This profile was locked or...<br>";
+						echo change_language($connect,'This profile was locked or',$lang)."...<br>";
 						echo change_language($connect,'A combination of user name and password was not found, check the data, please',$lang);
 					}
 					else
@@ -105,18 +124,20 @@ if(isset($_GET['num']))
 					}
 					else
 						echo"Please log in!";break;
-				case'edit_pers_data':
-					include"inc/edit_pers_data.php";break;
 				default:
 					echo show_articles($connect,$page_num);
 			}
 		?>
 	</div>
-	<!--праве меню-->
+                              	<!--/////////////////////RIGHT MENU//////////////////////////////-->
 	<div id='right_menu'>
 				<?php
-					if(!empty($name) and ($role=='admin'or $role=='editor'))
-						echo"<a href='index.php?id=art_form'>".change_language($connect,'Add article',$lang)."<a>";
+					if(!empty($name)){
+						if($role=='admin'or $role=='editor')
+							echo"<p><a href='index.php?id=art_form'>".change_language($connect,'Add article',$lang)."</a></p>";
+						if($role=='admin')
+							echo"<p><a href='index.php?id=translation_form'>".change_language($connect,'Translation page',$lang)."</a></p>";
+					}
 				?>
 	</div>
 </div>

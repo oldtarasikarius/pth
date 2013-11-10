@@ -1,8 +1,7 @@
 <?php
 	$language=array(
-			"Eng"=>"lang/eng.php",
-			"Укр"=>"lang/ukr.php",
-			"Рос"=>"lang/rus.php"
+			"<img src='img/eng.png' alt='flag' class='flag'>"=>"lang/eng.php",
+			"<img src='img/ukr.png' alt='flag' class='flag'>"=>"lang/ukr.php"
 	);
 	$menu1=array(
 		change_language($connect,'Home',$lang)=>"index.php",
@@ -22,7 +21,7 @@
 	);
 ?>
 	
-<img src="img/PTH.gif" id='main_img' />
+<img src="img/PTH.gif" alt='flag' id='main_img' />
 	
 <div id='main_menu'>
 	<?php

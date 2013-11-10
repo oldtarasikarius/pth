@@ -7,15 +7,18 @@ include"inc/lib.inc.php";
 	if(isset($_SESSION['name'])){
 		$name=$_SESSION['name'];
 		if($_SERVER['REQUEST_METHOD']=='POST'){
-			$art=clear_data($_POST['art']);
-			$header=clear_data($_POST['header']);
-			if(!empty($art)){
-				add_art($connect,$art,$header,$name);
+			$eng_art=clear_data($_POST['eng_art']);
+			$ukr_art=clear_data($_POST['ukr_art']);
+			$eng_head=clear_data($_POST['eng_head']);
+			$ukr_head=clear_data($_POST['ukr_head']);
+			if(!empty($eng_art) and !empty($ukr_art)){
+				add_art($connect,$eng_art,$ukr_art,$eng_head,$ukr_head,$name);
 				header("Location:index.php?id=articles");
+				exit();
 			}
 			else
 				header("Location:{$_SERVER['HTTP_REFERER']}");
 		}		
 	}
-echo change_language($connect,'something is going wrong',$lang)."... <a href='".$_SERVER['HTTP_REFERER']."'>".change_language($connect,'Previous page',$lang)."</a>";
+
 ?>

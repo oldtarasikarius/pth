@@ -11,16 +11,16 @@ if(isset($_SESSION['name'])){
 			$link_name=$name;
 
 
-	if($_FILES['userfile']['type']!=="image/jpeg"  ){
+	if ($_FILES['userfile']['type']!=="image/jpeg"  ){
 		header("Location:index.php?id=edit_profile&link=".$link_name);
 		exit();
 	}
 
-	if(isset($_FILES['userfile'])){	
-		if(!is_dir("C:/Users/Public/SERVER/Apache2.2/htdocs/pth/img/photos/$link_name"))
-			mkdir("C:/Users/Public/SERVER/Apache2.2/htdocs/pth/img/photos/$link_name");
+	if (isset($_FILES['userfile'])) {
+		if(!is_dir("img/photos/$link_name"))
+			mkdir("img/photos/$link_name");
 
-		$fname="img/photos/".$link_name."/".$link_name; 
+		$fname="img/photos/{$link_name}/{$link_name}";
 		$tmp_name=$_FILES['userfile']['tmp_name'];
 		$_SESSION['fname']=$fname;
 		if(move_uploaded_file($tmp_name,$fname)){

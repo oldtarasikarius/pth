@@ -4,9 +4,10 @@ require"inc/lib.inc.php";
 if(isset($_GET["num"])){
 	if(isset($_SESSION['name'])){
 		if($_SESSION['role']=="admin"){
-			$id=$_GET['num'];
-			del_art($connect,$id);
-			header("Location:index.php?id=articles");
+			$num=$_GET['num'];
+			del_art($connect,$num);
+			header("Location:index.php");
+			exit();
 		}
 	}
 }
