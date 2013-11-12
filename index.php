@@ -3,9 +3,15 @@ session_start();
 require"inc/lib.inc.php";
 
 $name="";
-if(isset($_SESSION['name']))
-	$name=$_SESSION['name'];	
-$lang="eng";
+if(isset($_SESSION['name'])) {
+		if(user_init($connect,$_SESSION['name'],$_SESSION['date'])){
+			$name=$_SESSION['name'];
+		}
+		else {
+			unset($_SESSION['name']);
+		}
+}
+	$lang="eng";
 if(isset($_SESSION['lang']))
 	$lang=$_SESSION['lang'];
 $id="";
@@ -133,9 +139,9 @@ if(isset($_GET['num']))
 	<div id='right_menu'>
 				<?php
 					if(!empty($name)){
-						if($role=='admin'or $role=='editor')
+						if($_SESSION['role']=='admin'or $role=='editor')
 							echo"<p><a href='index.php?id=art_form'>".change_language($connect,'Add article',$lang)."</a></p>";
-						if($role=='admin')
+						if($_SESSION['role']=='admin')
 							echo"<p><a href='index.php?id=translation_form'>".change_language($connect,'Translation page',$lang)."</a></p>";
 					}
 				?>

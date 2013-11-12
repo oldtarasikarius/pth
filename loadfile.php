@@ -11,7 +11,8 @@ if(isset($_SESSION['name'])){
 			$link_name=$name;
 
 
-	if ($_FILES['userfile']['type']!=="image/jpeg"  ){
+	if ($_FILES['userfile']['type']!=="image/jpeg" or $_FILES['userfile']['type']!=="image/gif" ){
+		$_SESSION['error']=change_language($connect,'You can only upload *.gif and *.jpg files!!!',$lang);
 		header("Location:index.php?id=edit_profile&link=".$link_name);
 		exit();
 	}

@@ -53,6 +53,7 @@ function change_language($connect,$text,$lang=false){
 		unset($_SESSION['name']);
 	}
 //Показати статті//////////////////////////////////////////////////////////////////////////////////////////
+
 function show_articles($connect,$page_num){
 	$num=10*($page_num-1);
 	$lang="eng";
@@ -105,7 +106,38 @@ function show_articles($connect,$page_num){
 		echo"</p>";
 			
 	}
-//////////////////////////
+//////////////////////////oNE FULL ARTICLE//////////////////
+function rating($connect,$num){
+	$lang="eng";
+  if(isset($_SESSION['lang']))
+		$lang=$_SESSION['lang'];
+	$sql=$connect->prepare("SELECT mark
+													FROM 	art_rating");
+	$sql->execute();
+	$row=$sql->fetch(PDO::FETCH_NUM);
+	if (!empty($row)){
+		$quan=count($row);
+		$sum=array_sum($row);
+		$rating=$sum/$quan;
+		echo change_language($connect,'Rating',$lang).": {$rating}\t\t\t\t\t".change_language($connect,'Votes',$lang).": {$quan}";
+		if ($_SESSION['role']=='admin') {
+			echo "\t\t\t\t\t<a href='del_rate_result.php?num=".$num."'>".change_language($connect,'Delete all results',$lang)."</a>";	
+		}
+	}
+	else {
+		echo change_language($connect,'Rating',$lang).": 0, ". change_language($connect,'No one has estimate this article yet',$lang);
+	}
+	
+}
+////////
+function del_rating($connect,$num){
+	$sql=$connect->prepare("DELETE FROM art_rating
+																WHERE art_num=:num");
+	$sql->bindParam(':num',$num);
+	$sql->execute();
+	return true;
+}
+////
 function show_art($connect,$num=""){
 	$lang="eng";
   if(isset($_SESSION['lang']))
@@ -139,6 +171,9 @@ function show_art($connect,$num=""){
 			$date=$row['date'];
 			$num=$row['id'];
 			echo"<h3><a href='index.php?id=articles&amp;num=".$num."'>".$header."</a></h3>";
+			echo "<p>";
+				rating($connect,$num);
+			echo "</p>";
 			echo"<p >".change_language($connect,'From',$lang).": {$login}</p>";
 			echo"<p >{$date}</p>";
 			echo"<p>".$art."</p>";
@@ -352,20 +387,40 @@ function del_mark($connect,$name){
 	$sql->execute();
 	return true;
 }
-
+/////////////
+function user_init($connect,$name,$date){
+	$sql=$connect->prepare("SELECT 	login
+						FROM 	people
+						WHERE 	login=:name
+						AND 	registration_date=:date");
+	$sql->bindParam(':name',$name);
+	$sql->bindParam(':date',$date);
+	$sql->execute();
+	$row=$sql->fetch();
+	if (!empty($row)) {
+		return TRUE;
+	}
+	else{
+		return false;
+	}
+  }
 //Вхід користувача///////////////////////////////////////////////////////////////////////////
 	function enter($connect,$login,$password){
-		$sql=$connect->prepare("SELECT login,password,role
-								FROM people
-								WHERE login=:login
-								AND password=:password");
+		$sql=$connect->prepare("SELECT 	login,
+										password,
+										role,
+										registration_date
+								FROM 	people
+								WHERE 	login=:login
+								AND 	password=:password");
 		$sql->bindParam(':login',$login,PDO::PARAM_STR);
 		$sql->bindParam(':password',$password,PDO::PARAM_STR);
 		$sql->execute();		
-		if($sql->fetch()!==FALSE){
-			$row=$sql->fetch(PDO::FETCH_ASSOC);
+		$row=$sql->fetch(PDO::FETCH_ASSOC);
+		if(!empty($row)){
 			if($row['role']!=='locked'){
 				$_SESSION['name']=$login;
+				$_SESSION['date']=$row['registration_date'];
 				header("Location:{$_SERVER['HTTP_REFERER']}");
 			}
 		}
@@ -377,27 +432,27 @@ function del_mark($connect,$name){
 	function registration($connect,$login,$password,$email,$lang){
 		$date=date("Y-m-d H:i:s");
 	//login cheking
-		$sql=$connect->prepare("SELECT login,password,mail     
+		$sql=$connect->prepare("SELECT login     
 								FROM people
 								WHERE login=:login");
 		$sql->bindParam(':login',$login,PDO::PARAM_STR);						
 		$sql->execute();
 		$row=$sql->fetch(PDO::FETCH_ASSOC);
 		
-		if($login==$row['login']){
+		if(!empty($row['login'])){
 			return $_SESSION['error']="A user with this name already registered, please choose another";
 			die();
 		}
 	 //mail cheking
-		$sql=$connect->prepare("SELECT login,password,mail     
+		$sql=$connect->prepare("SELECT mail     
 								FROM people
-								WHERE mail=:email'
+								WHERE mail=:email
 							");
 		$sql->bindParam(':email',$email,PDO::PARAM_STR);						
 		$sql->execute();
 		$row=$sql->fetch(PDO::FETCH_ASSOC);
 		
-		if($email==$row['mail']){
+		if(!empty($row['mail'])){
 			return $_SESSION['error']="This e-mail already registered,check again please";
 			exit();
 		}
@@ -413,9 +468,7 @@ function del_mark($connect,$name){
 		$sql->execute();
 		
 		$_SESSION['name']="$login";
-		if (isset($_SESSION['error'])) {
-			unset($_SESSION['error']);
-		}
+		$_SESSION['date']=$date;
 		return true;
 	}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -464,8 +517,6 @@ function insert_w($connect,$eng,$ukr=''){
                             WHERE id=:id");
   $sql->bindParam(':ukr',$ukr);
   $sql->bindParam(':id',$id);
-  //print_r($sql);
-  //$sql->execute(array(':id' => $id,':ukr' => $ukr));
   $sql->execute();
 }
 	////////////////////////////////
@@ -483,7 +534,7 @@ function insert_w($connect,$eng,$ukr=''){
       $ukr=clear_data($row['ukr']);
       $id=$row['id'];
       echo "<tr>
-							<td>$eng</td>
+							<td class='eng_word'>$eng</td>
 							<td><input type='text' name='".$id."'  value='".$ukr."'></td>
 							<td><a href='del_word.php?id=".$id."' onclick= \"return confirm('Sure?')\" >
 								Del</a></td>
@@ -653,7 +704,7 @@ function show_names($connect){ 			// showing users names function
 		$login=$row['login'];
 		echo "<li><a href='index.php?id=profile&amp;link=".$login."'>".$login."</a></li>";
 		$count++;
-		IF($count==$num)
+		if($count==$num)
 			break;		
 	}
 }

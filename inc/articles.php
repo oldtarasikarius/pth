@@ -10,6 +10,7 @@ if (isset($_SESSION['name'])) {
 	<?php
 		if(!$mark=get_mark($connect,$name,$num)){
 	?>
+			<p><?php echo change_language($connect,'Your oppinion about this article',$lang)?></p>
 			<form action="add_mark.php?num=<?php echo $num; ?>" method="post" >
 				<input type="radio" name='mark' value="1">
 					<?php echo change_language($connect,'Awsome',$lang);?><br />

@@ -21,7 +21,7 @@
 	);
 ?>
 	
-<img src="img/PTH.gif" alt='flag' id='main_img' />
+<a href='index.php'><img src="img/PTH.gif" alt='flag' id='main_img' /></a>
 	
 <div id='main_menu'>
 	<?php

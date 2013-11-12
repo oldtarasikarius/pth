@@ -1,4 +1,5 @@
 <?php
+session_start();
 require"inc/lib.inc.php";
 if(isset ($_GET['link'])){
 	$link_name=clear_data($_GET['link']);

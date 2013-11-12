@@ -18,7 +18,7 @@ $role=show_role($connect,$link_name);
 		show_pers_data($connect,$link_name);
 	?>
 
-	<?php if($role=="admin"or ($name==$link_name and $role!=="authorless")){?>
+	<?php if($_SESSION['role']=="admin"or ($name==$link_name and $role!=="authorless")){?>
 		<p ><a href="index.php?id=edit_profile&amp;link=<?=$link_name?>">
 			<?php echo change_language($connect,"Edit Profile",$lang); ?></a></p>
 	<?php }?>

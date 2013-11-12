@@ -1,10 +1,17 @@
 <?php
-if($_SESSION['role']=="authorless")
+if($_SESSION['role']=="authorless") {
 	die(change_language($connect,"You have no rights to be here!",$lang));
-if(isset ($_GET['link']))
+}
+if(isset ($_GET['link'])) {
 	$link_name=clear_data($_GET['link']);
-else
+}
+else {
 	$link_name=$name;
+}
+if (isset($_SESSION['error'])) {
+	echo $_SESSION['error'];
+	unset($_SESSION['error']);
+}
 
 ?>
 <div class='change_ava_form'>
